@@ -1,0 +1,27 @@
+import { Token } from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import { TokenID } from "./types";
+
+export const MINTS : {[key in TokenID] : PublicKey} = {
+  [TokenID.BTC] : new PublicKey("9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E"),
+  [TokenID.ETH] : new PublicKey("2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk"),
+  [TokenID.SOL] : new PublicKey("So11111111111111111111111111111111111111112"),
+  [TokenID.RAY] : new PublicKey("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"),
+  [TokenID.SRM] : new PublicKey("SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt"),
+  [TokenID.USDT] : new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"),
+  [TokenID.USDC] : new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+  [TokenID.UST] : new PublicKey("CXLBjMMcwkc17GfJtBos6rQCo1ypeH6eDbB82Kby4MRm"),
+  [TokenID.PAI] : new PublicKey("Ea5SjE2Y6yvCeW5dYTn7PYMuW5ikXkvbGdcmSnXeaLjS"),
+}
+
+export const DECIMALS : {[key in TokenID]: number} = {
+  [TokenID.BTC] : 1e6,
+  [TokenID.ETH] : 1e6,
+  [TokenID.SOL] : 1e9,
+  [TokenID.RAY] : 1e9,
+  [TokenID.SRM] : 1e6,
+  [TokenID.USDT]: 1e6,
+  [TokenID.USDC]: 1e6,
+  [TokenID.UST] : 1e9,
+  [TokenID.PAI] : 1e6,
+}
