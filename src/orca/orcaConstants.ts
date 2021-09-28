@@ -1,11 +1,11 @@
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { Market, Swapper, TokenID } from "../types";
+import { Market, PairMarket, Swapper, TokenID } from "../types";
 import { Parser } from "../utils/Parser";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const ORCA_SWAP_PROGRAM = new PublicKey("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
 
-export class OrcaMarket extends Market implements Swapper {
+export class OrcaMarket extends Market implements Swapper, PairMarket {
   constructor(
     public name: string,
     public tokenIdA: TokenID,

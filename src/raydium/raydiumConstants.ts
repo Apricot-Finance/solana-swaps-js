@@ -1,13 +1,13 @@
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import {Market, Swapper, TokenID} from "../types";
+import {Market, PairMarket, Swapper, TokenID} from "../types";
 import { MINTS } from "../mints";
 import { SERUM_PROGRAM } from "../serum/serumConstants";
 import { Parser } from "../utils/Parser";
 
 export const RAYDIUM_AMM_PROGRAM = new PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
 
-export class RaydiumMarket extends Market implements Swapper {
+export class RaydiumMarket extends Market implements Swapper, PairMarket {
   mintA: PublicKey;
   mintB: PublicKey;
 

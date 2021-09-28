@@ -24,6 +24,11 @@ export abstract class Market {
   abstract getSwapper(args: any) : Swapper;
 }
 
+export interface PairMarket {
+  tokenIdA: TokenID;
+  tokenIdB: TokenID;
+}
+
 // a swapper is usually associated with a specific market, and can perform swap
 export interface Swapper {
   createSwapInstructions(

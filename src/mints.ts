@@ -1,4 +1,3 @@
-import { Token } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { TokenID } from "./types";
 

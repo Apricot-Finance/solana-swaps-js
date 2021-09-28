@@ -1,10 +1,10 @@
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import {Market, Swapper, TokenID} from "../types";
+import {Market, PairMarket, Swapper, TokenID} from "../types";
 import { MINTS } from "../mints";
 
 export const SERUM_PROGRAM = new PublicKey("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin");
 
-export class SerumMarket extends Market {
+export class SerumMarket extends Market implements PairMarket {
   mintA: PublicKey;
   mintB: PublicKey;
 
