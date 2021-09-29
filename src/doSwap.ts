@@ -15,7 +15,7 @@ if(process.argv.length < 6) {
   process.exit();
 }
 
-const [nodeStr, scriptStr, fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
+const [_nodeStr, _scriptStr, fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
 
 async function getAssociatedTokAcc(tokenId: TokenID, owner: PublicKey) : Promise<PublicKey> {
   return await Token.getAssociatedTokenAddress(

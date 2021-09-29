@@ -48,7 +48,7 @@ class RaydiumMarket extends types_1.Market {
     getSwapper() {
         return this;
     }
-    createSwapInstructions(fromToken, fromAmount, fromTokenAccount, toToken, minToAmount, toTokenAccount, tradeOwner) {
+    createSwapInstructions(_fromToken, fromAmount, fromTokenAccount, _toToken, minToAmount, toTokenAccount, tradeOwner) {
         return __awaiter(this, void 0, void 0, function* () {
             const buffer = this.INST_LAYOUT.encode({
                 cmd: 9,

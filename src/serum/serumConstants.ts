@@ -1,4 +1,4 @@
-import { PublicKey, TransactionInstruction } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import {Market, PairMarket, Swapper, TokenID} from "../types";
 import { MINTS } from "../mints";
 
@@ -29,32 +29,9 @@ export class SerumMarket extends Market implements PairMarket {
     this.mintB = MINTS[tokenIdB];
   }
 
-  getSwapper(args: any) : Swapper {
+  getSwapper(_args: any) : Swapper {
     // Serum Swap requires an OpenOrder account that costs like 0.02 SOL. Not setting it up for now.
     throw new Error("Not implemented");
-  }
-}
-
-export class SerumSwapper implements Swapper {
-  constructor(
-    public market: SerumMarket,
-    public openOrders: PublicKey,
-  ) {
-
-  }
-
-  async createSwapInstructions(
-    fromToken: TokenID,
-    fromAmount: number,
-    fromTokenAccount: PublicKey,
-   
-    toToken: TokenID,
-    toAmount: number,
-    toTokenAccount: PublicKey,
-    tradeOwner: PublicKey,
-  ) : Promise<TransactionInstruction[]> {
-
-    throw new Error("NOT IMPLEMENTED");
   }
 }
 

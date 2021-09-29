@@ -1,15 +1,6 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SERUM_SOL_USDC_MARKET = exports.SERUM_ETH_USDC_MARKET = exports.SERUM_BTC_USDC_MARKET = exports.SerumSwapper = exports.SerumMarket = exports.SERUM_PROGRAM = void 0;
+exports.SERUM_SOL_USDC_MARKET = exports.SERUM_ETH_USDC_MARKET = exports.SERUM_BTC_USDC_MARKET = exports.SerumMarket = exports.SERUM_PROGRAM = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const types_1 = require("../types");
 const mints_1 = require("../mints");
@@ -34,24 +25,12 @@ class SerumMarket extends types_1.Market {
         this.mintA = mints_1.MINTS[tokenIdA];
         this.mintB = mints_1.MINTS[tokenIdB];
     }
-    getSwapper(args) {
+    getSwapper(_args) {
         // Serum Swap requires an OpenOrder account that costs like 0.02 SOL. Not setting it up for now.
         throw new Error("Not implemented");
     }
 }
 exports.SerumMarket = SerumMarket;
-class SerumSwapper {
-    constructor(market, openOrders) {
-        this.market = market;
-        this.openOrders = openOrders;
-    }
-    createSwapInstructions(fromToken, fromAmount, fromTokenAccount, toToken, toAmount, toTokenAccount, tradeOwner) {
-        return __awaiter(this, void 0, void 0, function* () {
-            throw new Error("NOT IMPLEMENTED");
-        });
-    }
-}
-exports.SerumSwapper = SerumSwapper;
 exports.SERUM_BTC_USDC_MARKET = new SerumMarket("BTC/USDC", types_1.TokenID.BTC, types_1.TokenID.USDC, new web3_js_1.PublicKey("A8YFbxQYFVqKZaoYJLLUVcQiWP7G2MeEgW5wsAQgMvFw"), // market
 new web3_js_1.PublicKey("6wLt7CX1zZdFpa6uGJJpZfzWvG6W9rxXjquJDYiFwf9K"), // bids
 new web3_js_1.PublicKey("6EyVXMMA58Nf6MScqeLpw1jS12RCpry23u9VMfy8b65Y"), // asks

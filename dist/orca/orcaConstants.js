@@ -32,7 +32,7 @@ class OrcaMarket extends types_1.Market {
             .u64("in_amount")
             .u64("min_out_amount");
     }
-    getSwapper(args) {
+    getSwapper(_args) {
         return this;
     }
     createSwapInstructions(fromToken, fromAmount, fromTokenAccount, toToken, minToAmount, toTokenAccount, tradeOwner) {

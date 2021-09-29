@@ -46,10 +46,10 @@ export class RaydiumMarket extends Market implements Swapper, PairMarket {
   }
 
   async createSwapInstructions(
-    fromToken: TokenID,
+    _fromToken: TokenID,
     fromAmount: number,
     fromTokenAccount: PublicKey,
-    toToken: TokenID,
+    _toToken: TokenID,
     minToAmount: number,
     toTokenAccount: PublicKey,
     tradeOwner: PublicKey,
@@ -137,7 +137,7 @@ export const RAYDIUM_SOL_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC, 
   new PublicKey("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2"),  // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("HRk9CMrpq7Jn9sh7mzxE8CChHG8dneX9p475QKz4Fsfc"),   // openOrders
+  new PublicKey("HRk9CMrpq7Jn9sh7mzxE8CChHG8dneX9p475QKz4Fsfc"),  // openOrders
   new PublicKey("CZza3Ej4Mc58MnxWA385itCC9jCo3L1D7zc3LKy1bZMR"),  // targetOrders
   new PublicKey("DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz"),  // vaultA
   new PublicKey("HLmqeL62xR1QoZ1HKKbXRrdN1p3phKpxRMb2VVopvBBz"),  // vaultB

@@ -20,7 +20,7 @@ export class OrcaMarket extends Market implements Swapper, PairMarket {
     super(name, [tokenIdA, tokenIdB]);
   }
 
-  getSwapper(args: any) : Swapper {
+  getSwapper(_args: any) : Swapper {
     return this;
   }
 

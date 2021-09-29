@@ -43,7 +43,7 @@ if (process.argv.length < 6) {
     console.log("buySell is buy or sell");
     process.exit();
 }
-const [nodeStr, scriptStr, fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
+const [_nodeStr, _scriptStr, fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
 function getAssociatedTokAcc(tokenId, owner) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield spl_token_1.Token.getAssociatedTokenAddress(spl_token_1.ASSOCIATED_TOKEN_PROGRAM_ID, spl_token_1.TOKEN_PROGRAM_ID, mints_1.MINTS[tokenId], owner);
