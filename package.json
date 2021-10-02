@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "description": "interface for interacting with DEX/AMMs on solana",
   "main": "dist/index.js",
-  "type": "types/index.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist; tsc -p tsconfig.json",
     "type": "rm -rf types; tsc -p tsconfig.json --declaration --emitDeclarationOnly --outDir types",
