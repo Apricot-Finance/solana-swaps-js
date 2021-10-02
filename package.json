@@ -6,7 +6,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist; tsc -p tsconfig.json",
-    "type": "rm -rf types; tsc -p tsconfig.json --declaration --emitDeclarationOnly --outDir types",
+    "lint": "eslint src",
     "swap": "node dist/doSwap.js"
   },
   "repository": {
