@@ -1,7 +1,7 @@
 // test only works in node
 import * as fs from "fs";
 import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium/raydiumConstants";
-import { ORCA_USDT_USDC_MARKET } from "./orca/orcaConstants"
+import { ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca/orcaConstants"
 import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { TokenID } from "./types";
@@ -34,6 +34,7 @@ async function doSwap() {
   const usdcTokenAccount = await getAssociatedTokAcc(TokenID.USDC, keypair.publicKey);
   const usdtTokenAccount = await getAssociatedTokAcc(TokenID.USDT, keypair.publicKey);
   const ustTokenAccount = await getAssociatedTokAcc(TokenID.UST, keypair.publicKey);
+  const sbrTokenAccount = await getAssociatedTokAcc(TokenID.SBR, keypair.publicKey);
 
   //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
   const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
@@ -46,6 +47,7 @@ async function doSwap() {
     SOL: TokenID.SOL,
     USDT: TokenID.USDT,
     UST: TokenID.UST,
+    SBR: TokenID.SBR,
   }[coin]!;
 
   const mainTokenAcc = {
@@ -54,6 +56,7 @@ async function doSwap() {
     SOL: solTokenAccount,
     USDT: usdtTokenAccount,
     UST: ustTokenAccount,
+    SBR: sbrTokenAccount,
   }[coin]!;
 
   const buyTokenID = isBuy ? mainTokenType : TokenID.USDC;
@@ -67,6 +70,7 @@ async function doSwap() {
     SOL: ()=> RAYDIUM_SOL_USDC_MARKET,
     USDT: ()=> ORCA_USDT_USDC_MARKET,
     UST: ()=> MERCURIAL_USTv1_USDC_MARKET,
+    SBR: ()=> ORCA_SBR_USDC_MARKET,
   }[coin]!;
 
   const swapper = getSwapper();

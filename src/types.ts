@@ -10,6 +10,8 @@ export enum TokenID {
   USDC = "USDC",
   UST = "UST",
   PAI = "PAI",
+  SBR = "SBR",
+  ORCA = "ORCA",
 }
 
 // market contains meta data
