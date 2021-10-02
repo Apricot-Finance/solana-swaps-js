@@ -68,7 +68,7 @@ export class SaberMarket extends Market implements Swapper, PairMarket {
   }
 }
 
-export const ORCA_USDT_USDC_MARKET = new SaberMarket(
+export const SABER_USTv1_USDC_MARKET = new SaberMarket(
   "UST/USDC",
   TokenID.UST,
   TokenID.USDC,

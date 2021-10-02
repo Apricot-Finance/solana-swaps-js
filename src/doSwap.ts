@@ -6,6 +6,7 @@ import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { TokenID } from "./types";
 import { MINTS, DECIMALS } from "./mints";
+import { SABER_USTv1_USDC_MARKET } from "./saber/saberConstants";
 
 if(process.argv.length < 6) {
   console.log(`Usage: node ${process.argv[1]} privateKeyFile COIN buySell sellAmt`);
@@ -32,8 +33,10 @@ async function doSwap() {
   const solTokenAccount = await getAssociatedTokAcc(TokenID.SOL, keypair.publicKey);
   const usdcTokenAccount = await getAssociatedTokAcc(TokenID.USDC, keypair.publicKey);
   const usdtTokenAccount = await getAssociatedTokAcc(TokenID.USDT, keypair.publicKey);
+  const ustTokenAccount = await getAssociatedTokAcc(TokenID.UST, keypair.publicKey);
 
-  const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+  //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+  const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
 
   const isBuy = buySell === "buy";
 
@@ -42,6 +45,7 @@ async function doSwap() {
     ETH: TokenID.ETH,
     SOL: TokenID.SOL,
     USDT: TokenID.USDT,
+    UST: TokenID.UST,
   }[coin]!;
 
   const mainTokenAcc = {
@@ -49,6 +53,7 @@ async function doSwap() {
     ETH: ethTokenAccount,
     SOL: solTokenAccount,
     USDT: usdtTokenAccount,
+    UST: ustTokenAccount,
   }[coin]!;
 
   const buyTokenID = isBuy ? mainTokenType : TokenID.USDC;
@@ -61,11 +66,10 @@ async function doSwap() {
     ETH: ()=> RAYDIUM_ETH_USDC_MARKET,
     SOL: ()=> RAYDIUM_SOL_USDC_MARKET,
     USDT: ()=> ORCA_USDT_USDC_MARKET,
+    UST: ()=> SABER_USTv1_USDC_MARKET,
   }[coin]!;
 
   const swapper = getSwapper();
-
-
 
   const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc)).value?.data as any).parsed.info.tokenAmount.uiAmount;
 
