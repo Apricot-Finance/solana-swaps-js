@@ -3,6 +3,10 @@
   "compilerOptions": {
     "target": "es5",                                     /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "module": "commonjs",                                /* Specify what module code is generated. */
+    // output .d.ts declaration files for consumers
+    "declaration": true,
+    // output .js.map sourcemap files for consumers
+    "sourceMap": true,
     "rootDirs": ["src"],
     "outDir": "dist",
     "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
