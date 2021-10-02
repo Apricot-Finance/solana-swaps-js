@@ -1,11 +1,11 @@
-import { PublicKey, SYSVAR_CLOCK_PUBKEY, TransactionInstruction } from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Market, PairMarket, Swapper, TokenID } from "../types";
 import { Parser } from "../utils/Parser";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
-export const SABER_SWAP_PROGRAM = new PublicKey("SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ");
+export const MERCURIAL_SWAP_PROGRAM = new PublicKey("MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky");
 
-export class SaberMarket extends Market implements Swapper, PairMarket {
+export class MercurialMarket extends Market implements Swapper, PairMarket {
   constructor(
     public name: string,
     public tokenIdA: TokenID,
@@ -14,7 +14,7 @@ export class SaberMarket extends Market implements Swapper, PairMarket {
     public swapAuthority: PublicKey,
     public vaultA: PublicKey,
     public vaultB: PublicKey,
-    public fees: PublicKey,
+    public vaultC: PublicKey,
   ) {
     super(name, [tokenIdA, tokenIdB]);
   }
@@ -29,37 +29,34 @@ export class SaberMarket extends Market implements Swapper, PairMarket {
     .u64("min_out_amount");
 
   async createSwapInstructions(
-    fromToken: TokenID,
+    _fromToken: TokenID,
     fromAmount: number,
     fromTokenAccount: PublicKey,
-    toToken: TokenID,
+    _toToken: TokenID,
     minToAmount: number,
     toTokenAccount: PublicKey,
     tradeOwner: PublicKey,
   ) : Promise<TransactionInstruction[]> {
 
     const buffer = this.INST_LAYOUT.encode({
-      cmd: 1, 
+      cmd: 4, 
       in_amount: fromAmount, 
       min_out_amount: minToAmount
     });
 
-    const poolSource = fromToken === this.tokenIdA ? this.vaultA : this.vaultB;
-    const poolDest = toToken === this.tokenIdA ? this.vaultA : this.vaultB;
-
     const ix = new TransactionInstruction({
-      programId: SABER_SWAP_PROGRAM, 
+      programId: MERCURIAL_SWAP_PROGRAM, 
       keys: [
         {pubkey: this.swap,             isSigner: false, isWritable: false},
+        {pubkey: TOKEN_PROGRAM_ID,      isSigner: false, isWritable: false},
         {pubkey: this.swapAuthority,    isSigner: false, isWritable: false},
         {pubkey: tradeOwner,            isSigner: true,  isWritable: false},
+        {pubkey: this.vaultA,           isSigner: false, isWritable: true},
+        {pubkey: this.vaultB,           isSigner: false, isWritable: true},
+        {pubkey: this.vaultC,           isSigner: false, isWritable: true},
+        // below 2 accounts on solscan are displayed incorrectly but on solana exporer
         {pubkey: fromTokenAccount,      isSigner: false, isWritable: true},
-        {pubkey: poolSource,            isSigner: false, isWritable: true},
-        {pubkey: poolDest,              isSigner: false, isWritable: true},
         {pubkey: toTokenAccount,        isSigner: false, isWritable: true},
-        {pubkey: this.fees,             isSigner: false, isWritable: true},
-        {pubkey: TOKEN_PROGRAM_ID,      isSigner: false, isWritable: false},
-        {pubkey: SYSVAR_CLOCK_PUBKEY,   isSigner: false, isWritable: false},
       ],
       data: buffer,
     });
@@ -68,14 +65,14 @@ export class SaberMarket extends Market implements Swapper, PairMarket {
   }
 }
 
-export const SABER_USTv1_USDC_MARKET = new SaberMarket(
+export const MERCURIAL_USTv1_USDC_MARKET = new MercurialMarket(
   "UST/USDC",
   TokenID.UST,
   TokenID.USDC,
 
-  new PublicKey("7oAd7xG4m3oC2qeWB1szghTebAZyyGPAFDJ4wwwbRSNi"), // swap
-  new PublicKey("ASpJBf8HtyrNxaMqFNpjYCqi8SsJC5h56hd3HQUNk6M7"), // swapAuthority
-  new PublicKey("HDYfJLpZKaMFb84jM4mRytn7XLR8UFZUnQpSfhJJaNEy"), // vaultA
-  new PublicKey("D9yh4KAysxt9GLacVe4Wwh2XqghhcjTCSTV9HuM7TBJd"), // vaultB
-  new PublicKey("H8sa4bG8oWg89vHQeZnwzumqTk2gnRWKb19LzZgge3W6"), // fees
+  new PublicKey("USD6kaowtDjwRkN5gAjw1PDMQvc9xRp8xW9GK8Z5HBA"), // swap Mercurial UST 3-Pool (USDC-USDT-UST)
+  new PublicKey("FDonWCo5RJhx8rzSwtToUXiLEL7dAqLmUhnyH76F888D"), // swapAuthority
+  new PublicKey("Go93HBNLMK6QnSHyZTViAoti9GCmSRhkeZMiVoJmcrud"), // vaultA
+  new PublicKey("2uZVPMdS8VFwMEZjZNzP1f78m1zaqvT3R2JwMs1w9fU3"), // vaultB
+  new PublicKey("5nazSj6MfaEeuAoQezMG3raWuZiyFjE7fmURUgDeP8cF"), // vaultC 
 )

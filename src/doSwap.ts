@@ -6,7 +6,7 @@ import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { TokenID } from "./types";
 import { MINTS, DECIMALS } from "./mints";
-import { SABER_USTv1_USDC_MARKET } from "./saber/saberConstants";
+import { MERCURIAL_USTv1_USDC_MARKET } from "./mercurial";
 
 if(process.argv.length < 6) {
   console.log(`Usage: node ${process.argv[1]} privateKeyFile COIN buySell sellAmt`);
@@ -66,7 +66,7 @@ async function doSwap() {
     ETH: ()=> RAYDIUM_ETH_USDC_MARKET,
     SOL: ()=> RAYDIUM_SOL_USDC_MARKET,
     USDT: ()=> ORCA_USDT_USDC_MARKET,
-    UST: ()=> SABER_USTv1_USDC_MARKET,
+    UST: ()=> MERCURIAL_USTv1_USDC_MARKET,
   }[coin]!;
 
   const swapper = getSwapper();
