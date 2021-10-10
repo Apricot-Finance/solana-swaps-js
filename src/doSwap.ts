@@ -1,6 +1,6 @@
 // test only works in node
 import * as fs from "fs";
-import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium/raydiumConstants";
+import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium/raydiumConstants";
 import { ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca/orcaConstants"
 import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -36,6 +36,7 @@ async function doSwap() {
   const ustTokenAccount = await getAssociatedTokAcc(TokenID.UST, keypair.publicKey);
   const sbrTokenAccount = await getAssociatedTokAcc(TokenID.SBR, keypair.publicKey);
   const orcaTokenAccount = await getAssociatedTokAcc(TokenID.ORCA, keypair.publicKey);
+  const rayTokenAccount = await getAssociatedTokAcc(TokenID.RAY, keypair.publicKey);
 
   //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
   const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
@@ -50,6 +51,7 @@ async function doSwap() {
     UST: TokenID.UST,
     SBR: TokenID.SBR,
     ORCA: TokenID.ORCA,
+    RAY: TokenID.RAY,
   }[coin]!;
 
   const mainTokenAcc = {
@@ -60,6 +62,7 @@ async function doSwap() {
     UST: ustTokenAccount,
     SBR: sbrTokenAccount,
     ORCA: orcaTokenAccount,
+    RAY: rayTokenAccount,
   }[coin]!;
 
   const buyTokenID = isBuy ? mainTokenType : TokenID.USDC;
@@ -75,11 +78,12 @@ async function doSwap() {
     UST: ()=> MERCURIAL_USTv1_USDC_MARKET,
     SBR: ()=> ORCA_SBR_USDC_MARKET,
     ORCA: ()=> ORCA_ORCA_USDC_MARKET,
+    RAY: ()=> RAYDIUM_RAY_USDC_MARKET,
   }[coin]!;
 
   const swapper = getSwapper();
 
-  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc)).value?.data as any).parsed.info.tokenAmount.uiAmount;
+  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as any).parsed.info.tokenAmount.uiAmount;
 
   const tradeIxs = await swapper.createSwapInstructions(
     sellTokenID,
@@ -97,10 +101,10 @@ async function doSwap() {
   const tradeTx = new Transaction();
   tradeIxs.forEach(ix=>tradeTx.add(ix));
 
-  const sig = await conn.sendTransaction(tradeTx, [keypair]);
-  await conn.confirmTransaction(sig);
+  const sig = await conn.sendTransaction(tradeTx, [keypair], {preflightCommitment: 'confirmed'});
+  await conn.confirmTransaction(sig, 'confirmed');
 
-  const parsedBuyAfterAmt = ((await conn.getParsedAccountInfo(buyTokenAcc)).value?.data as any).parsed.info.tokenAmount.uiAmount;
+  const parsedBuyAfterAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as any).parsed.info.tokenAmount.uiAmount;
 
   console.log(sig);
   console.log(`Received ${parsedBuyAfterAmt - parsedBuyBeforeAmt}`);
