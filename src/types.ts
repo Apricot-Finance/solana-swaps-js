@@ -4,6 +4,7 @@ export enum TokenID {
   BTC = "BTC",
   ETH = "ETH",
   SOL = "SOL",
+  mSOL = "mSOL",
   RAY = "RAY",
   SRM = "SRM",
   USDT = "USDT",
