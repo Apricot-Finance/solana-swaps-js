@@ -13,6 +13,7 @@ export enum TokenID {
   PAI = "PAI",
   SBR = "SBR",
   ORCA = "ORCA",
+  USTv2 = "USTv2",
 }
 
 // market contains meta data

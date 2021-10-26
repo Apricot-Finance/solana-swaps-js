@@ -21,7 +21,8 @@
   "homepage": "https://github.com/Apricot-Finance/solana-swaps-js#readme",
   "dependencies": {
     "@solana/spl-token": "^0.1.8",
-    "@solana/web3.js": "^1.29.0"
+    "@solana/web3.js": "^1.29.0",
+    "tiny-invariant": "^1.1.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.2",

@@ -1,12 +1,14 @@
 // test only works in node
 import * as fs from "fs";
-import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium/raydiumConstants";
-import { ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca/orcaConstants"
-import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium";
+import { ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca"
+import { SABER_USTv2_USDC_MARKET } from './saber';
+import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { TokenID } from "./types";
 import { MINTS, DECIMALS } from "./mints";
 import { MERCURIAL_USTv1_USDC_MARKET } from "./mercurial";
+import invariant from "tiny-invariant";
 
 if(process.argv.length < 6) {
   console.log(`Usage: node ${process.argv[1]} privateKeyFile COIN buySell sellAmt`);
@@ -16,7 +18,7 @@ if(process.argv.length < 6) {
   process.exit();
 }
 
-const [_nodeStr, _scriptStr, fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
+const [, , fileStr, coin, buySell, sellAmt, buyAmt] = process.argv;
 
 async function getAssociatedTokAcc(tokenId: TokenID, owner: PublicKey) : Promise<PublicKey> {
   return await Token.getAssociatedTokenAddress(
@@ -38,6 +40,7 @@ async function doSwap() {
   const sbrTokenAccount = await getAssociatedTokAcc(TokenID.SBR, keypair.publicKey);
   const orcaTokenAccount = await getAssociatedTokAcc(TokenID.ORCA, keypair.publicKey);
   const rayTokenAccount = await getAssociatedTokAcc(TokenID.RAY, keypair.publicKey);
+  const ustv2TokenAccount = await getAssociatedTokAcc(TokenID.USTv2, keypair.publicKey);
 
   //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
   const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
@@ -54,7 +57,9 @@ async function doSwap() {
     SBR: TokenID.SBR,
     ORCA: TokenID.ORCA,
     RAY: TokenID.RAY,
-  }[coin]!;
+  USTv2: TokenID.USTv2,
+  }[coin];
+  invariant(mainTokenType);
 
   const mainTokenAcc = {
     BTC: btcTokenAccount,
@@ -66,7 +71,9 @@ async function doSwap() {
     SBR: sbrTokenAccount,
     ORCA: orcaTokenAccount,
     RAY: rayTokenAccount,
-  }[coin]!;
+    USTv2: ustv2TokenAccount,
+  }[coin];
+  invariant(mainTokenAcc);
 
   const buyTokenID = isBuy ? mainTokenType : TokenID.USDC;
   const buyTokenAcc = isBuy ? mainTokenAcc : usdcTokenAccount;
@@ -83,11 +90,13 @@ async function doSwap() {
     SBR: ()=> ORCA_SBR_USDC_MARKET,
     ORCA: ()=> ORCA_ORCA_USDC_MARKET,
     RAY: ()=> RAYDIUM_RAY_USDC_MARKET,
-  }[coin]!;
+    USTv2: () => SABER_USTv2_USDC_MARKET,
+  }[coin];
+  invariant(getSwapper);
 
   const swapper = getSwapper();
 
-  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as any).parsed.info.tokenAmount.uiAmount;
+  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount;
 
   const tradeIxs = await swapper.createSwapInstructions(
     sellTokenID,
@@ -108,7 +117,7 @@ async function doSwap() {
   const sig = await conn.sendTransaction(tradeTx, [keypair], {preflightCommitment: 'confirmed'});
   await conn.confirmTransaction(sig, 'confirmed');
 
-  const parsedBuyAfterAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as any).parsed.info.tokenAmount.uiAmount;
+  const parsedBuyAfterAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount;
 
   console.log(sig);
   console.log(`Received ${parsedBuyAfterAmt - parsedBuyBeforeAmt}`);
