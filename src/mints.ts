@@ -15,6 +15,7 @@ export const MINTS : {[key in TokenID] : PublicKey} = {
   [TokenID.SBR] : new PublicKey("Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1"),
   [TokenID.ORCA] : new PublicKey("orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE"),
   [TokenID.USTv2] : new PublicKey("9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i"),
+  [TokenID.MNDE] : new PublicKey("MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey"),
 }
 
 export const DECIMALS : {[key in TokenID]: number} = {
@@ -31,4 +32,5 @@ export const DECIMALS : {[key in TokenID]: number} = {
   [TokenID.SBR] : 1e6,
   [TokenID.ORCA] : 1e6,
   [TokenID.USTv2] : 1e6,
+  [TokenID.MNDE] : 1e9,
 }

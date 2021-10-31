@@ -1,11 +1,11 @@
 // test only works in node
 import * as fs from "fs";
 import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium";
-import { ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca"
+import { ORCA_MNDE_mSOL_MARKET, ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca"
 import { SABER_USTv2_USDC_MARKET } from './saber';
 import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { TokenID } from "./types";
+import { SwapperType, TokenID } from "./types";
 import { MINTS, DECIMALS } from "./mints";
 import { MERCURIAL_USTv1_USDC_MARKET } from "./mercurial";
 import invariant from "tiny-invariant";
@@ -41,10 +41,12 @@ async function doSwap() {
   const orcaTokenAccount = await getAssociatedTokAcc(TokenID.ORCA, keypair.publicKey);
   const rayTokenAccount = await getAssociatedTokAcc(TokenID.RAY, keypair.publicKey);
   const ustv2TokenAccount = await getAssociatedTokAcc(TokenID.USTv2, keypair.publicKey);
+  const mndeTokenAccount = await getAssociatedTokAcc(TokenID.MNDE, keypair.publicKey);
 
   //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
-  const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
-
+  // const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
+  const conn = new Connection("https://apricot.genesysgo.net/", "confirmed");
+  
   const isBuy = buySell === "buy";
 
   const mainTokenType = {
@@ -58,10 +60,12 @@ async function doSwap() {
     ORCA: TokenID.ORCA,
     RAY: TokenID.RAY,
   USTv2: TokenID.USTv2,
+    MNDE: TokenID.MNDE,
   }[coin];
   invariant(mainTokenType);
 
-  const mainTokenAcc = {
+  const tokenAccounts: Record<TokenID, PublicKey | undefined> = {
+    USDC: usdcTokenAccount,
     BTC: btcTokenAccount,
     ETH: ethTokenAccount,
     SOL: solTokenAccount,
@@ -72,13 +76,12 @@ async function doSwap() {
     ORCA: orcaTokenAccount,
     RAY: rayTokenAccount,
     USTv2: ustv2TokenAccount,
-  }[coin];
+    MNDE: mndeTokenAccount,
+    SRM: undefined,
+    PAI: undefined,
+  }
+  const mainTokenAcc = tokenAccounts[mainTokenType];
   invariant(mainTokenAcc);
-
-  const buyTokenID = isBuy ? mainTokenType : TokenID.USDC;
-  const buyTokenAcc = isBuy ? mainTokenAcc : usdcTokenAccount;
-  const sellTokenID = isBuy ? TokenID.USDC : mainTokenType;
-  const sellTokenAcc = isBuy ? usdcTokenAccount : mainTokenAcc;
 
   const getSwapper = {
     BTC: ()=> RAYDIUM_BTC_USDC_MARKET,
@@ -91,13 +94,36 @@ async function doSwap() {
     ORCA: ()=> ORCA_ORCA_USDC_MARKET,
     RAY: ()=> RAYDIUM_RAY_USDC_MARKET,
     USTv2: () => SABER_USTv2_USDC_MARKET,
+    MNDE: ()=> ORCA_MNDE_mSOL_MARKET,
   }[coin];
   invariant(getSwapper);
-
   const swapper = getSwapper();
 
-  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount;
+  const tokenBAcc = tokenAccounts[swapper.tokenIdB]
+  invariant(tokenBAcc);
 
+  const buyTokenID = isBuy ? mainTokenType : swapper.tokenIdB;
+  const buyTokenAcc = isBuy ? mainTokenAcc : tokenBAcc;
+  const sellTokenID = isBuy ? swapper.tokenIdB : mainTokenType;
+  const sellTokenAcc = isBuy ? tokenBAcc : mainTokenAcc;
+
+  const swapperType = {
+    BTC: SwapperType.Single,
+    ETH: SwapperType.Single,
+    SOL: SwapperType.Single,
+    mSOL: SwapperType.Single,
+    USDT: SwapperType.Single,
+    UST: SwapperType.Single,
+    SBR: SwapperType.Single,
+    ORCA: SwapperType.Single,
+    RAY: SwapperType.Single,
+    USTv2: SwapperType.Single,
+    MNDE: SwapperType.Single,
+  }[coin];
+  invariant(swapperType);
+
+  const parsedBuyBeforeAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount;
+  console.log(sellTokenAcc.toString());
   const tradeIxs = await swapper.createSwapInstructions(
     sellTokenID,
     parseFloat(sellAmt) * DECIMALS[sellTokenID],
@@ -109,7 +135,6 @@ async function doSwap() {
 
     keypair.publicKey
   );
-
 
   const tradeTx = new Transaction();
   tradeIxs.forEach(ix=>tradeTx.add(ix));

@@ -14,6 +14,12 @@ export enum TokenID {
   SBR = "SBR",
   ORCA = "ORCA",
   USTv2 = "USTv2",
+  MNDE = "MNDE",
+}
+
+export enum SwapperType {
+  Single = "Single",
+  Multi = "Multi",
 }
 
 // market contains meta data
@@ -26,6 +32,14 @@ export abstract class Market {
   }
 
   abstract getSwapper(args: any) : Swapper;
+}
+
+export abstract class MultiMarket {
+  constructor(
+    public markets: Market[]
+  ) {
+
+  }
 }
 
 export interface PairMarket {
@@ -44,6 +58,24 @@ export interface Swapper {
     toTokenAccount: PublicKey,
     tradeOwner: PublicKey,
   ) : Promise<TransactionInstruction[]>;
+}
+
+export interface MultiSwapper {
+  createMultiSwapInstructions(
+    fromToken: TokenID,
+    fromAmount: number,
+    fromTokenAccount: PublicKey,
+    middleToken: TokenID,
+    middleTokenAccount: PublicKey,
+    toToken: TokenID,
+    minToAmount: number,
+    toTokenAccount: PublicKey,
+    tradeOwner: PublicKey,
+  ) : Promise<TransactionInstruction[]>;
+}
+
+export function IsMultiSwapper(object: any): boolean {
+  return 'createMultiSwapInstructions' in object;
 }
 
 export class Dex {
