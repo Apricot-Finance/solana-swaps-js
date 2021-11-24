@@ -1,6 +1,7 @@
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 
 export enum TokenID {
+  APT = "APT",
   BTC = "BTC",
   ETH = "ETH",
   SOL = "SOL",

@@ -1,6 +1,6 @@
 // test only works in node
 import * as fs from "fs";
-import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET } from "./raydium";
+import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET, RAYDIUM_APT_USDC_MARKET } from "./raydium";
 import { ORCA_MNDE_mSOL_MARKET, ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca"
 import { SABER_USTv2_USDC_MARKET } from './saber';
 import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction } from "@solana/web3.js";
@@ -30,6 +30,7 @@ async function doSwap() {
   const keyStr = fs.readFileSync(fileStr, "utf8");
   const privateKey = JSON.parse(keyStr);
   const keypair = Keypair.fromSecretKey(new Uint8Array(privateKey));
+  const aptTokenAccount = await getAssociatedTokAcc(TokenID.APT, keypair.publicKey);
   const btcTokenAccount = await getAssociatedTokAcc(TokenID.BTC, keypair.publicKey);
   const ethTokenAccount =  await getAssociatedTokAcc(TokenID.ETH, keypair.publicKey); 
   const solTokenAccount = await getAssociatedTokAcc(TokenID.SOL, keypair.publicKey);
@@ -50,6 +51,7 @@ async function doSwap() {
   const isBuy = buySell === "buy";
 
   const mainTokenType = {
+    APT: TokenID.APT,
     BTC: TokenID.BTC,
     ETH: TokenID.ETH,
     SOL: TokenID.SOL,
@@ -59,12 +61,13 @@ async function doSwap() {
     SBR: TokenID.SBR,
     ORCA: TokenID.ORCA,
     RAY: TokenID.RAY,
-  USTv2: TokenID.USTv2,
+    USTv2: TokenID.USTv2,
     MNDE: TokenID.MNDE,
   }[coin];
   invariant(mainTokenType);
 
   const tokenAccounts: Record<TokenID, PublicKey | undefined> = {
+    APT: aptTokenAccount,
     USDC: usdcTokenAccount,
     BTC: btcTokenAccount,
     ETH: ethTokenAccount,
@@ -84,6 +87,7 @@ async function doSwap() {
   invariant(mainTokenAcc);
 
   const getSwapper = {
+    APT: () => RAYDIUM_APT_USDC_MARKET,
     BTC: ()=> RAYDIUM_BTC_USDC_MARKET,
     ETH: ()=> RAYDIUM_ETH_USDC_MARKET,
     SOL: ()=> RAYDIUM_SOL_USDC_MARKET,
@@ -108,6 +112,7 @@ async function doSwap() {
   const sellTokenAcc = isBuy ? tokenBAcc : mainTokenAcc;
 
   const swapperType = {
+    APT: SwapperType.Single,
     BTC: SwapperType.Single,
     ETH: SwapperType.Single,
     SOL: SwapperType.Single,

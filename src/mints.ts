@@ -2,6 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import { TokenID } from "./types";
 
 export const MINTS : {[key in TokenID] : PublicKey} = {
+  [TokenID.APT] : new PublicKey("APTtJyaRX5yGTsJU522N4VYWg3vCvSb65eam5GrPT5Rt"),
   [TokenID.BTC] : new PublicKey("9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E"),
   [TokenID.ETH] : new PublicKey("2FPyTwcZLUg1MDrwsyoP4D6s1tM7hAkHYRjkNb5w6Pxk"),
   [TokenID.SOL] : new PublicKey("So11111111111111111111111111111111111111112"),
@@ -19,6 +20,7 @@ export const MINTS : {[key in TokenID] : PublicKey} = {
 }
 
 export const DECIMALS : {[key in TokenID]: number} = {
+  [TokenID.APT] : 1e6,
   [TokenID.BTC] : 1e6,
   [TokenID.ETH] : 1e6,
   [TokenID.SOL] : 1e9,
