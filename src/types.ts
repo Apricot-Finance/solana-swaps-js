@@ -16,6 +16,7 @@ export enum TokenID {
   ORCA = "ORCA",
   USTv2 = "USTv2",
   MNDE = "MNDE",
+  FTT = "FTT",
 }
 
 export enum SwapperType {

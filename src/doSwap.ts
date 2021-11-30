@@ -1,7 +1,7 @@
 // test only works in node
 import * as fs from "fs";
-import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET, RAYDIUM_APT_USDC_MARKET } from "./raydium";
-import { ORCA_MNDE_mSOL_MARKET, ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET } from "./orca"
+import { RAYDIUM_BTC_USDC_MARKET, RAYDIUM_ETH_USDC_MARKET, RAYDIUM_mSOL_USDC_MARKET, RAYDIUM_RAY_USDC_MARKET, RAYDIUM_SOL_USDC_MARKET, RAYDIUM_APT_USDC_MARKET, RAYDIUM_SRM_USDC_MARKET} from "./raydium";
+import { ORCA_MNDE_mSOL_MARKET, ORCA_ORCA_USDC_MARKET, ORCA_SBR_USDC_MARKET, ORCA_USDT_USDC_MARKET, ORCA_FTT_USDC_MARKET } from "./orca"
 import { SABER_USTv2_USDC_MARKET } from './saber';
 import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction } from "@solana/web3.js";
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -43,6 +43,8 @@ async function doSwap() {
   const rayTokenAccount = await getAssociatedTokAcc(TokenID.RAY, keypair.publicKey);
   const ustv2TokenAccount = await getAssociatedTokAcc(TokenID.USTv2, keypair.publicKey);
   const mndeTokenAccount = await getAssociatedTokAcc(TokenID.MNDE, keypair.publicKey);
+  const fttTokenAccount = await getAssociatedTokAcc(TokenID.FTT, keypair.publicKey);
+  const srmTokenAccount = await getAssociatedTokAcc(TokenID.SRM, keypair.publicKey);
 
   //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
   // const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
@@ -63,6 +65,8 @@ async function doSwap() {
     RAY: TokenID.RAY,
     USTv2: TokenID.USTv2,
     MNDE: TokenID.MNDE,
+    SRM: TokenID.SRM,
+    FTT: TokenID.FTT,
   }[coin];
   invariant(mainTokenType);
 
@@ -80,8 +84,9 @@ async function doSwap() {
     RAY: rayTokenAccount,
     USTv2: ustv2TokenAccount,
     MNDE: mndeTokenAccount,
-    SRM: undefined,
+    SRM: srmTokenAccount,
     PAI: undefined,
+    FTT: fttTokenAccount,
   }
   const mainTokenAcc = tokenAccounts[mainTokenType];
   invariant(mainTokenAcc);
@@ -99,6 +104,8 @@ async function doSwap() {
     RAY: ()=> RAYDIUM_RAY_USDC_MARKET,
     USTv2: () => SABER_USTv2_USDC_MARKET,
     MNDE: ()=> ORCA_MNDE_mSOL_MARKET,
+    FTT: () => ORCA_FTT_USDC_MARKET ,
+    SRM: () => RAYDIUM_SRM_USDC_MARKET,
   }[coin];
   invariant(getSwapper);
   const swapper = getSwapper();
@@ -124,6 +131,8 @@ async function doSwap() {
     RAY: SwapperType.Single,
     USTv2: SwapperType.Single,
     MNDE: SwapperType.Single,
+    FTT: SwapperType.Single,
+    SRM: SwapperType.Single,
   }[coin];
   invariant(swapperType);
 
