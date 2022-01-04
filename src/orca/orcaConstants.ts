@@ -133,3 +133,94 @@ export const ORCA_FTT_USDC_MARKET = new OrcaMarket(
   new PublicKey("FwCombynV2fTVizxPCNA2oZKoWXLZgdJThjE4Xv9sjxc"), // poolMint
   new PublicKey("C8D52rGuZcsBENhWtR9aqJVRU62cL7jyyEhxesKwc1k8"), // fees
 );
+
+export const ORCA_APT_USDC_MARKET = new OrcaMarket(
+  "APT/USDC",
+  TokenID.APT,
+  TokenID.USDC,
+
+  new PublicKey("Fg3UabVqnfycMtkiTVoaia9eNafehtT9Y4TicH2iBtvK"), // swap
+  new PublicKey("JDEYn1JsacdxoB4v4mbctFSVrSUPttacX3gxWphFHJKZ"), // swapAuthority
+  new PublicKey("636crNdZTf46gFUKuedaBCZDBMLahf7KGud2LyTMskU5"), // vaultA
+  new PublicKey("DGEYFkEHyiuHWtHeCGiQGn1JbkGHqYrNwaP44miRbgxu"), // vaultB
+  new PublicKey("HNrYngS1eoqkjWro9D3Y5Z9sWBDzPNK2tX4rfV2Up177"), // poolMint
+  new PublicKey("41H5mWwsZKewJeV4wWiNjQ3U4VYBnwqCpzvAWt86baHd"), // fees
+);
+
+export const ORCA_BTC_USDC_MARKET = new OrcaMarket(
+  "BTC/USDC",
+  TokenID.BTC,
+  TokenID.USDC,
+
+  new PublicKey("2dwHmCoAGxCXvTbLTMjqAhvEFAHWUt9kZaroJJJdmoD4"), // swap
+  new PublicKey("BwJ1vMtJiBy7dJaVToR1KUwVbBsGUTNN4QdKVSf8EEh1"), // swapAuthority
+  new PublicKey("D3Wv78j9STkfJx3vhzoCzpMZ4RqCg8oaTNGzi1rZpdJg"), // vaultA
+  new PublicKey("HMFLg2GtbWSSEe92Vuf2LQdUpCacGj2m2PwvMqzwQFNi"), // vaultB
+  new PublicKey("J3kvcay3N16FBdawgnqoJ9v9p6XCvyCLE2Z9F5RLvGkj"), // poolMint
+  new PublicKey("HR7c67SkeLvCpHrVSu7MiiAERQh6iD1NrCJsj3kWiZnK"), // fees
+);
+
+export const ORCA_ETH_USDC_MARKET = new OrcaMarket(
+  "ETH/USDC",
+  TokenID.ETH,
+  TokenID.USDC,
+
+  new PublicKey("FgZut2qVQEyPBibaTJbbX2PxaMZvT1vjDebiVaDp5BWP"), // swap
+  new PublicKey("4dfCZR32xXhoTgMRhnViNaTFwiKP9A34TDjHCR3xM5rg"), // swapAuthority
+  new PublicKey("H9h5yTBfCHcb4eRP87fXczzXgNaMzKihr7bf1sjw7iuZ"), // vaultA
+  new PublicKey("JA98RXv2VdxQD8pRQq4dzJ1Bp4nH8nokCGmxvPWKJ3hx"), // vaultB
+  new PublicKey("3e1W6Aqcbuk2DfHUwRiRcyzpyYRRjg6yhZZcyEARydUX"), // poolMint
+  new PublicKey("DLWewB12jzGn4wXJmFCddWDeof1Ma4cZYNRv9CP5hTvX"), // fees
+);
+
+export const ORCA_SOL_USDT_MARKET = new OrcaMarket(
+  "SOL/USDT",
+  TokenID.SOL,
+  TokenID.USDT,
+
+  new PublicKey("4bS6bkBdJ4B1Bt4ft3oGF8La7eKpCqz8xnu1AMpMxWSP"), // swap
+  new PublicKey("EAvLj3zW236pUSSSzwjL18QuPpkTxkWaVSR5GdX7yiNa"), // swapAuthority
+  new PublicKey("BBDQmitNga99M9QsBRnyos9uWPumNbWLC1mfbReJi45C"), // vaultA
+  new PublicKey("8xepSs1iXsSw8QrCS1rpZk8KY3fMwUZqDT4dmzDa2trX"), // vaultB
+  new PublicKey("BmZNYGt7aApGTUUxAQUYsW64cMbb6P7uniokCWaptj4D"), // poolMint
+  new PublicKey("HR2rWgcU6SNCWxJDozDu6qCgSSvUoKCynbhQPGRNqpCG"), // fees
+);
+
+export const ORCA_mSOL_SOL_MARKET = new OrcaMarket(
+  "mSOL/SOL",
+  TokenID.mSOL,
+  TokenID.SOL,
+
+  new PublicKey("9EQMEzJdE2LDAY1hw1RytpufdwAXzatYfQ3M2UuT9b88"), // swap
+  new PublicKey("6cwehd4xhKkJ2s7iGh4CaDb7KhMgqczSBnyNJieUYbHn"), // swapAuthority
+  new PublicKey("6xmki5RtGNHrfhTiHFfp9k3RQ9t8qgL1cYP2YCG2h179"), // vaultA
+  new PublicKey("Ew2coQtVGLeca31vqB2ssHntjzZgUy1ad9VuuAX8yw7p"), // vaultB
+  new PublicKey("29cdoMgu6MS2VXpcMo1sqRdWEzdUR9tjvoh8fcK8Z87R"), // poolMint
+  new PublicKey("6j2tt2UVYMQwqG3hRtyydW3odzBFwy3pN33tyB3xCKQ6"), // fees
+);
+
+export const ORCA_SRM_SOL_MARKET = new OrcaMarket(
+  "SRM/SOL",
+  TokenID.SRM,
+  TokenID.SOL,
+
+  new PublicKey("EGZ7tiLeH62TPV1gL8WwbXGzEPa9zmcpVnnkPKKnrE2U"), // swap
+  new PublicKey("JU8kmKzDHF9sXWsnoznaFDFezLsE5uomX2JkRMbmsQP"), // swapAuthority
+  new PublicKey("ANP74VNsHwSrq9uUSjiSNyNWvf6ZPrKTmE4gHoNd13Lg"), // vaultA
+  new PublicKey("75HgnSvXbWKZBpZHveX68ZzAhDqMzNDS29X6BGLtxMo1"), // vaultB
+  new PublicKey("APDFRM3HMr8CAGXwKHiu2f5ePSpaiEJhaURwhsRrUUt9"), // poolMint
+  new PublicKey("8JnSiuvQq3BVuCU3n4DrSTw9chBSPvEMswrhtifVkr1o"), // fees
+);
+
+export const ORCA_RAY_USDC_MARKET = new OrcaMarket(
+  "RAY/USDC",
+  TokenID.RAY,
+  TokenID.USDC,
+
+  new PublicKey("2R2VhohRc5WoNHtRdwnjovAQaZRAmr1DE3QFW5jfgb6v"), // swap
+  new PublicKey("9B9ZcYT8jDQ6XLe6gRLDCFv1zz3uHVKdbZT9DFhsYSQW"), // swapAuthority
+  new PublicKey("9ASj9zDg7cT6wtvn4euSUiZte8yN2U3Tn6cTVZvMHbU7"), // vaultA
+  new PublicKey("HGTxSWbb62nxk4oGkLkHUvrEzR5D4GKYRb8ZDcA2dpki"), // vaultB
+  new PublicKey("4cXw2MYj94TFBXLL73fEpMCr8DPrW68JvrV8mzWgktbD"), // poolMint
+  new PublicKey("HURhvCRsrwwR5TiG75Hn274WwL76kaKgjgC6n9h4FEHj"), // fees
+);
