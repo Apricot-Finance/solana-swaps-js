@@ -230,3 +230,43 @@ export const RAYDIUM_SRM_USDC_MARKET = new RaydiumMarket(
   new PublicKey("hUgoKy5wjeFbZrXDW4ecr42T4F5Z1Tos31g68s5EHbP"),  // vaultB
   new PublicKey("GVV4ZT9pccwy9d17STafFDuiSqFbXuRTdvKQ1zJX6ttX"),  // vaultSigner
 )
+
+export const RAYDIUM_stSOL_USDC_MARKET = new RaydiumMarket(
+  "stSOL/USDC",
+  TokenID.stSOL,
+  TokenID.USDC,
+  new PublicKey("6a1CsrpeZubDjEJE9s1CMVheB6HWM5d7m1cj2jkhyXhj"),   // amm
+  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
+  new PublicKey("28NQqHxrqMYMQ67aWyn9AzZ1F16PYd4zvLpiiKnEZpsD"),  // openOrders
+  new PublicKey("B8nmqinHQjyqAnMWNiqSzs1Jb8VbMpX5k9VUMnDp1gUA"),   // targetOrders
+  new PublicKey("DD6oh3HRCvMzqHkGeUW3za4pLgWNPJdV6aNYW3gVjXXi"),  // vaultA
+  new PublicKey("6KR4qkJN91LGko2gdizheri8LMtCwsJrhtsQt6QPwCi5"),  // vaultB
+
+  new PublicKey("5F7LGsP1LPtaRV7vVKgxwNYX4Vf22xvuzyXjyar7jJqp"),  // market
+  new PublicKey("HjJSzUbis6VhBZLCbSFN1YtvWLLdxutb7WEvymCLrBJt"),  // bids
+  new PublicKey("9e37wf6QUqe2s4J6UUNsuv6REQkwTxd47hXhDanm1adp"),   // asks
+  new PublicKey("CQY7LwdZJrfLRZcmEzUYp34XJbxhnxgF4UXmLKqJPLCk"),  // events
+  new PublicKey("4gqecEySZu6SEgCNhBJm7cEn2TFqCMsMNoiyski5vMTD"),  // vaultA
+  new PublicKey("6FketuhRzyTpevhgjz4fFgd5GL9fHeBeRsq9uJvu8h9m"),  // vaultB
+  new PublicKey("x1vRSsrhXkSn7xzJfu9mYP2i19SPqG1gjyj3vUWhim1"),  // vaultSigner
+)
+
+export const RAYDIUM_whETH_USDC_MARKET = new RaydiumMarket(
+  "whETH/USDC", 
+  TokenID.whETH, 
+  TokenID.USDC,
+  new PublicKey("EoNrn8iUhwgJySD1pHu8Qxm5gSQqLK3za4m8xzD2RuEb"),   // amm
+  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
+  new PublicKey("6iwDsRGaQucEcfXX8TgDW1eyTfxLAGrypxdMJ5uqoYcp"),  // openOrders
+  new PublicKey("EGZL5PtEnSHrNmeoQF64wXG6b5oqiTArDvAQuSRyomX5"),   // targetOrders
+  new PublicKey("DVWRhoXKCoRbvC5QUeTECRNyUSU1gwUM48dBMDSZ88U"),  // vaultA
+  new PublicKey("HftKFJJcUTu6xYcS75cDkm3y8HEkGgutcbGsdREDWdMr"),  // vaultB
+
+  new PublicKey("8Gmi2HhZmwQPVdCwzS7CM66MGstMXPcTVHA7jF19cLZz"),  // market
+  new PublicKey("3nXzH1gYKM1FKdSLHM7GCRG76mhKwyDjwinJxAg8jjx6"),  // bids
+  new PublicKey("b3L5dvehk48X4mDoKzZUZKA4nXGpPAMFkYxHZmsZ98n"),   // asks
+  new PublicKey("3z4QQPFdgNSxazqEAzmZD5C5tJWepczimVqWak2ZPY8v"),  // events
+  new PublicKey("8cCoWNtgCL7pMapGZ6XQ6NSyD1KC9cosUEs4QgeVq49d"),  // vaultA
+  new PublicKey("C7KrymKrLWhCsSjFaUquXU3SYRmgYLRmMjQ4dyQeFiGE"),  // vaultB
+  new PublicKey("FG3z1H2BBsf5ekEAxSc1K6DERuAuiXpSdUGkYecQrP5v"),  // vaultSigner
+)

@@ -17,6 +17,8 @@ export enum TokenID {
   USTv2 = "USTv2",
   MNDE = "MNDE",
   FTT = "FTT",
+  stSOL = "stSOL",
+  whETH = "whETH",
 }
 
 export enum SwapperType {
