@@ -174,7 +174,7 @@ async function doSwap() {
   tradeIxs.forEach(ix=>tradeTx.add(ix));
 
   const sig = await conn.sendTransaction(tradeTx, [keypair], {preflightCommitment: 'confirmed'});
-  await conn.confirmTransaction(sig, 'confirmed');
+  await conn.confirmTransaction(sig, 'max');
 
   const parsedBuyAfterAmt = ((await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount;
 

@@ -85,8 +85,8 @@ export const SABER_USTv2_USDC_MARKET = new SaberMarket(
   new PublicKey("9osV5a7FXEjuMujxZJGBRXVAyQ5fJfBFNkyAf6fSz9kw"), // swapAuthority
   new PublicKey("J63v6qEZmQpDqCD8bd4PXu2Pq5ZbyXrFcSa3Xt1HdAPQ"), // USTv2 valut
   new PublicKey("BnKQtTdLw9qPCDgZkWX3sURkBAoKCUYL1yahh6Mw7mRK"), // USDC vault
-  new PublicKey("35rkTKhWZ7s7mMFafKikzLFAwWqyczJ4Wh9KpKg1kVuR"), // USTv2 admin fee dest
-  new PublicKey("EX1XJauoedrAzhj1sC66U1h44SEipBWbmyoEuRwTfYsW"), // USDC admin fee dest
+  new PublicKey("BYgyVxdrGa3XNj1cx1XHAVyRG8qYhBnv1DS59Bsvmg5h"), // USTv2 admin fee dest
+  new PublicKey("G9nt2GazsDj3Ey3KdA49Sfaq9K95Dc72Ejps4NKTP2SR"), // USDC admin fee dest
 );
 
 export const SABER_USDT_USDC_MARKET = new SaberMarket(
@@ -98,6 +98,6 @@ export const SABER_USDT_USDC_MARKET = new SaberMarket(
   new PublicKey("5C1k9yV7y4CjMnKv8eGYDgWND8P89Pdfj79Trk2qmfGo"), // swapAuthority
   new PublicKey("EnTrdMMpdhugeH6Ban6gYZWXughWxKtVGfCwFn78ZmY3"), // USDT valut
   new PublicKey("CfWX7o2TswwbxusJ4hCaPobu2jLCb1hfXuXJQjVq3jQF"), // USDC vault
-  new PublicKey("2SL8iP8EjnUr6qTkbkfZt9tauXwJgc4GKXkYCCbLGbVP"), // USDT admin fee dest
-  new PublicKey("GLztedC76MeBXjAmVXMezcHQzdmQaVLiXCZr9KEBSR6Y"), // USDC admin fee dest
+  new PublicKey("63aJYYuZddSnCGyE8FNrCVQWnXhjh6CQSRwcDeSMhdVC"), // USDT admin fee dest
+  new PublicKey("XZuQG7CQrAA6y6tHM9CLrDjDUWwuUU2SBoV7pLaGDQT"), // USDC admin fee dest
 );
