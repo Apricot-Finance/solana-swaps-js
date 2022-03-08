@@ -250,3 +250,16 @@ export const ORCA_mSOL_USDT_MARKET = new OrcaMarket(
   new PublicKey("9cMWe4UYRPGAUUsTkjShJWVM7bk8DUBgxtwwH8asFJoV"), // poolMint
   new PublicKey("7GPvi21QbwMyBoXU5Zqf8VhnuEh7VH4A1SRPgHJ36eE7"), // fees
 );
+
+export const ORCA_scnSOL_USDC_MARKET = new OrcaMarket(
+  "scnSOL/USDC",
+  TokenID.scnSOL,
+  TokenID.USDC,
+
+  new PublicKey("6Gh36sNXrGWYiWr999d9iZtqgnipJbWuBohyHBN1cJpS"), // swap
+  new PublicKey("GXWEpRURaQZ9E62Q23EreTUfBy4hfemXgWFUWcg7YFgv"), // swapAuthority
+  new PublicKey("7xs9QsrxQDVoWQ8LQ8VsVjfPKBrPGjvg8ZhaLnU1i2VR"), // vaultA
+  new PublicKey("FZFJK64Fk1t619zmVPqCx8Uy29zJ3WuvjWitCQuxXRo3"), // vaultB
+  new PublicKey("Dkr8B675PGnNwEr9vTKXznjjHke5454EQdz3iaSbparB"), // poolMint
+  new PublicKey("HsC1Jo38jK3EpoNAkxfoUJhQVPa28anewZpLfeouUNk7"), // fees
+);
