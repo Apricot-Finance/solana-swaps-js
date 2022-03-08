@@ -19,6 +19,7 @@ export enum TokenID {
   FTT = "FTT",
   stSOL = "stSOL",
   whETH = "whETH",
+  scnSOL = "scnSOL",
 }
 
 export enum SwapperType {
