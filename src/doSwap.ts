@@ -5,7 +5,7 @@ import {
   RAYDIUM_ETH_USDC_MARKET,
   RAYDIUM_mSOL_USDC_MARKET,
   RAYDIUM_RAY_USDC_MARKET,
-  RAYDIUM_SOL_USDC_MARKET,
+  // RAYDIUM_SOL_USDC_MARKET,
   RAYDIUM_APT_USDC_MARKET,
   RAYDIUM_SRM_USDC_MARKET,
   RAYDIUM_stSOL_USDC_MARKET,
@@ -13,19 +13,24 @@ import {
 } from './raydium';
 import {
   ORCA_MNDE_mSOL_MARKET,
-  ORCA_ORCA_USDC_MARKET,
+  // ORCA_ORCA_USDC_MARKET,
   ORCA_SBR_USDC_MARKET,
   ORCA_USDT_USDC_MARKET,
   ORCA_FTT_USDC_MARKET,
   ORCA_scnSOL_USDC_MARKET,
 } from './orca';
 import { SABER_USTv2_USDC_MARKET } from './saber';
-import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, ParsedAccountData, PublicKey, Transaction } from '@solana/web3.js';
 import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { SwapperType, TokenID } from './types';
 import { MINTS, DECIMALS } from './mints';
 import { MERCURIAL_USTv1_USDC_MARKET } from './mercurial';
 import invariant from 'tiny-invariant';
+import {
+  ORCA_ORCA_USDC_WHIRL_MARKET,
+  ORCA_SOL_USDC_WHIRL_MARKET,
+} from './orca/orcaWhirlPoolConstants';
+import connection from './utils/connection';
 
 if (process.argv.length < 6) {
   console.log(`Usage: node ${process.argv[1]} privateKeyFile COIN buySell sellAmt`);
@@ -69,9 +74,7 @@ async function doSwap() {
   const whEthTokenAccount = await getAssociatedTokAcc(TokenID.whETH, keypair.publicKey);
   const scnSOLTokenAccount = await getAssociatedTokAcc(TokenID.scnSOL, keypair.publicKey);
 
-  //const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
-  // const conn = new Connection("https://lokidfxnwlabdq.main.genesysgo.net:8899/", "confirmed");
-  const conn = new Connection('https://apricot.genesysgo.net/', 'confirmed');
+  const conn = connection;
 
   const isBuy = buySell === 'buy';
 
@@ -96,7 +99,7 @@ async function doSwap() {
   }[coin];
   invariant(mainTokenType);
 
-  const tokenAccounts: Record<TokenID, PublicKey | undefined> = {
+  const tokenAccounts: Partial<Record<TokenID, PublicKey | undefined>> = {
     APT: aptTokenAccount,
     USDC: usdcTokenAccount,
     BTC: btcTokenAccount,
@@ -124,12 +127,14 @@ async function doSwap() {
     APT: () => RAYDIUM_APT_USDC_MARKET,
     BTC: () => RAYDIUM_BTC_USDC_MARKET,
     ETH: () => RAYDIUM_ETH_USDC_MARKET,
-    SOL: () => RAYDIUM_SOL_USDC_MARKET,
+    // SOL: () => RAYDIUM_SOL_USDC_MARKET,
+    SOL: () => ORCA_SOL_USDC_WHIRL_MARKET,
     mSOL: () => RAYDIUM_mSOL_USDC_MARKET,
     USDT: () => ORCA_USDT_USDC_MARKET,
     UST: () => MERCURIAL_USTv1_USDC_MARKET,
     SBR: () => ORCA_SBR_USDC_MARKET,
-    ORCA: () => ORCA_ORCA_USDC_MARKET,
+    // ORCA: () => ORCA_ORCA_USDC_MARKET,
+    ORCA: () => ORCA_ORCA_USDC_WHIRL_MARKET,
     RAY: () => RAYDIUM_RAY_USDC_MARKET,
     USTv2: () => SABER_USTv2_USDC_MARKET,
     MNDE: () => ORCA_MNDE_mSOL_MARKET,
@@ -174,7 +179,7 @@ async function doSwap() {
   const parsedBuyBeforeAmt = (
     (await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData
   ).parsed.info.tokenAmount.uiAmount;
-  console.log(sellTokenAcc.toString());
+  console.log('Sell token account: ' + sellTokenAcc.toString());
   const tradeIxs = await swapper.createSwapInstructions(
     sellTokenID,
     parseFloat(sellAmt) * DECIMALS[sellTokenID],
@@ -190,14 +195,17 @@ async function doSwap() {
   const tradeTx = new Transaction();
   tradeIxs.forEach(ix => tradeTx.add(ix));
 
-  const sig = await conn.sendTransaction(tradeTx, [keypair], { preflightCommitment: 'confirmed' });
+  const sig = await conn.sendTransaction(tradeTx, [keypair], {
+    preflightCommitment: 'confirmed',
+    skipPreflight: true,
+  });
   await conn.confirmTransaction(sig, 'max');
 
   const parsedBuyAfterAmt = (
     (await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData
   ).parsed.info.tokenAmount.uiAmount;
 
-  console.log(sig);
+  console.log(`Tx sig ${sig}`);
   console.log(`Received ${parsedBuyAfterAmt - parsedBuyBeforeAmt}`);
   console.log('DONE');
   process.exit();
