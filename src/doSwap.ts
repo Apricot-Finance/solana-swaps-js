@@ -9,7 +9,7 @@ import {
   RAYDIUM_APT_USDC_MARKET,
   RAYDIUM_SRM_USDC_MARKET,
   RAYDIUM_stSOL_USDC_MARKET,
-  RAYDIUM_whETH_USDC_MARKET,
+  // RAYDIUM_whETH_USDC_MARKET,
 } from './raydium';
 import {
   ORCA_MNDE_mSOL_MARKET,
@@ -29,6 +29,7 @@ import invariant from 'tiny-invariant';
 import {
   ORCA_ORCA_USDC_WHIRL_MARKET,
   ORCA_SOL_USDC_WHIRL_MARKET,
+  ORCA_WHETH_USDC_WHIRL_MARKET,
 } from './orca/orcaWhirlPoolConstants';
 import connection from './utils/connection';
 
@@ -141,7 +142,8 @@ async function doSwap() {
     FTT: () => ORCA_FTT_USDC_MARKET,
     SRM: () => RAYDIUM_SRM_USDC_MARKET,
     stSOL: () => RAYDIUM_stSOL_USDC_MARKET,
-    whETH: () => RAYDIUM_whETH_USDC_MARKET,
+    // whETH: () => RAYDIUM_whETH_USDC_MARKET,
+    whETH: () => ORCA_WHETH_USDC_WHIRL_MARKET,
     scnSOL: () => ORCA_scnSOL_USDC_MARKET,
   }[coin];
   invariant(getSwapper);
@@ -197,7 +199,7 @@ async function doSwap() {
 
   const sig = await conn.sendTransaction(tradeTx, [keypair], {
     preflightCommitment: 'confirmed',
-    skipPreflight: true,
+    skipPreflight: false,
   });
   await conn.confirmTransaction(sig, 'max');
 

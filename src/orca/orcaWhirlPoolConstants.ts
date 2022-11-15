@@ -167,3 +167,28 @@ export const ORCA_ORCA_USDC_WHIRL_MARKET = new OrcaWhirlPoolMarket(
   TokenID.ORCA,
   TokenID.USDC,
 );
+
+export const ORCA_STSOL_USDC_WHIRL_MARKET = new OrcaWhirlPoolMarket(
+  'stSOL/USDC',
+  TokenID.stSOL,
+  TokenID.USDC,
+);
+
+export const ORCA_MSOL_USDC_WHIRL_MARKET = new OrcaWhirlPoolMarket(
+  'mSOL/USDC',
+  TokenID.mSOL,
+  TokenID.USDC,
+);
+
+export const ORCA_WHETH_USDC_WHIRL_MARKET = new OrcaWhirlPoolMarket(
+  'whETH/USDC',
+  TokenID.whETH,
+  TokenID.USDC,
+  8,
+);
+
+export const ORCA_BTC_USDC_WHIRL_MARKET = new OrcaWhirlPoolMarket(
+  'BTC/USDC',
+  TokenID.BTC,
+  TokenID.USDC,
+);
