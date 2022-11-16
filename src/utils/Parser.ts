@@ -68,7 +68,10 @@ export class Parser {
       if (!(field.name in object)) {
         throw new Error(`Object does not contain ${field.name}`);
       }
-      const value = object[field.name];
+      let value = object[field.name];
+      if (typeof value === 'number') {
+        value = Math.floor(value);
+      }
       if (field.type === FieldType.u8) {
         buffer.writeUInt8(value as number, offset);
         //view.setUint8(offset, value);
