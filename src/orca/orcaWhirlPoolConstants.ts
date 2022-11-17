@@ -71,8 +71,10 @@ export class OrcaWhirlPoolMarket extends Market implements Swapper, PairMarket {
     minToAmount: number,
     toTokenAccount: PublicKey,
     tradeOwner: PublicKey,
+    connection?: Connection,
     sqrtPriceLimit?: number,
   ): Promise<TransactionInstruction[]> {
+    if (!connection) connection = this.connection;
     const isAToB = fromToken === this.tokenIdA;
 
     invariant(
@@ -92,7 +94,7 @@ export class OrcaWhirlPoolMarket extends Market implements Swapper, PairMarket {
       this.tickSpacing,
     ).publicKey;
 
-    const fetcher = new AccountFetcher(this.connection);
+    const fetcher = new AccountFetcher(connection);
     const whirlpoolData = await fetcher.getPool(whirlpoolAddress);
 
     invariant(whirlpoolData, 'Empty whirl pool data');
