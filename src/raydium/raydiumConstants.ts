@@ -6,6 +6,7 @@ import { SERUM_PROGRAM } from "../serum/serumConstants";
 import { Parser } from "../utils/Parser";
 
 export const RAYDIUM_AMM_PROGRAM = new PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
+export const OPENBOOK_SERUM_PROGRAM = new PublicKey("srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX");
 
 export class RaydiumMarket extends Market implements Swapper, PairMarket {
   mintA: PublicKey;
@@ -32,6 +33,7 @@ export class RaydiumMarket extends Market implements Swapper, PairMarket {
     public serumVaultA: PublicKey,
     public serumVaultB: PublicKey,
     public serumVaultSigner: PublicKey,
+    public serumProgram?: PublicKey,
   ) {
     super(name, [tokenIdA, tokenIdB]);
     if(name !== `${tokenIdA}/${tokenIdB}`) {
@@ -60,6 +62,8 @@ export class RaydiumMarket extends Market implements Swapper, PairMarket {
       min_out_amount: minToAmount
     });
 
+    const serumProgram = this.serumProgram || SERUM_PROGRAM;
+
     const ix = new TransactionInstruction({
       programId: RAYDIUM_AMM_PROGRAM, 
       keys: [
@@ -70,7 +74,7 @@ export class RaydiumMarket extends Market implements Swapper, PairMarket {
         {pubkey: this.targetOrders,     isSigner: false, isWritable: true},
         {pubkey: this.raydiumVaultA,    isSigner: false, isWritable: true},
         {pubkey: this.raydiumVaultB,    isSigner: false, isWritable: true},
-        {pubkey: SERUM_PROGRAM,         isSigner: false, isWritable: false},
+        {pubkey: serumProgram,          isSigner: false, isWritable: false},
         {pubkey: this.serumMarket,      isSigner: false, isWritable: true},
         {pubkey: this.serumBids,        isSigner: false, isWritable: true},
         {pubkey: this.serumAsks,        isSigner: false, isWritable: true},
@@ -137,18 +141,20 @@ export const RAYDIUM_SOL_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC, 
   new PublicKey("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2"),  // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("HRk9CMrpq7Jn9sh7mzxE8CChHG8dneX9p475QKz4Fsfc"),  // openOrders
+  new PublicKey("HmiHHzq4Fym9e1D4qzLS6LDDM3tNsCTBPDWHTLZ763jY"),  // openOrders
   new PublicKey("CZza3Ej4Mc58MnxWA385itCC9jCo3L1D7zc3LKy1bZMR"),  // targetOrders
   new PublicKey("DQyrAcCrDXQ7NeoqGgDCZwBvWDcYmFCjSb9JtteuvPpz"),  // vaultA
   new PublicKey("HLmqeL62xR1QoZ1HKKbXRrdN1p3phKpxRMb2VVopvBBz"),  // vaultB
 
-  new PublicKey("9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT"),  // market
-  new PublicKey("14ivtgssEBoBjuZJtSAPKYgpUK7DmnSwuPMqJoVTSgKJ"),  // bids
-  new PublicKey("CEQdAFKdycHugujQg9k2wbmxjcpdYZyVLfV9WerTnafJ"),  // asks
-  new PublicKey("5KKsLVU6TcbVDK4BS6K1DGDxnh4Q9xjYJ8XaDCG5t8ht"),  // events
-  new PublicKey("36c6YqAwyGKQG66XEp2dJc5JqjaBNv7sVghEtJv4c7u6"),  // vaultA
-  new PublicKey("8CFo8bL8mZQK8abbFyypFMwEDd8tVJjHTTojMLgQTUSZ"),  // vaultB
-  new PublicKey("F8Vyqk3unwxkXukZFQeYyGmFfTG3CAX4v24iyrjEYBJV"),  // vaultSigner
+  new PublicKey("8BnEgHoWFysVcuFFX7QztDmzuH8r5ZFvyP3sYwn1XTh6"),  // market
+  new PublicKey("5jWUncPNBMZJ3sTHKmMLszypVkoRK6bfEQMQUHweeQnh"),  // bids
+  new PublicKey("EaXdHx7x3mdGA38j5RSmKYSXMzAFzzUXCLNBEDXDn1d5"),  // asks
+  new PublicKey("8CvwxZ9Db6XbLD46NZwwmVDZZRDy7eydFcAGkXKh9axa"),  // events
+  new PublicKey("CKxTHwM9fPMRRvZmFnFoqKNd9pQR21c5Aq9bh5h9oghX"),  // vaultA
+  new PublicKey("6A5NHCj1yF6urc9wZNe6Bcjj4LVszQNj5DwAWG97yzMu"),  // vaultB
+  new PublicKey("CTz5UMLQm2SRWHzQnU62Pi4yJqbNGjgRBHqqp6oDHfF7"),  // vaultSigner
+
+  OPENBOOK_SERUM_PROGRAM,
 )
 
 export const RAYDIUM_USDT_USDC_MARKET = new RaydiumMarket(
@@ -157,18 +163,20 @@ export const RAYDIUM_USDT_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC, 
   new PublicKey("7TbGqz32RsuwXbXY7EyBCiAnMbJq1gm1wKmfjQjuwoyF"),  // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("6XXvXS3meWqnftEMUgdY8hDWGJfrb8t22x2k1WyVYwhF"),  // openOrders
+  new PublicKey("FyYofRmGHn7YW1RFEypHNnGoXWKeWr1mMZfXByasWj7a"),  // openOrders
   new PublicKey("AXY75qWM1t5X16FaeUovd9ZjL1W698cV843sDHV5EMqb"),  // targetOrders
   new PublicKey("Enb9jGaKzgDBfEbbUN3Ytx2ZLoZuBhBpjVX6DULiRmvu"),  // vaultA
   new PublicKey("HyyZpz1JUZjsfyiVSt3qz6E9PkwnBcyhUg4zKGthMNeH"),  // vaultB
 
-  new PublicKey("77quYg4MGneUdjgXCunt9GgM1usmrxKY31twEy3WHwcS"),  // market
-  new PublicKey("37m9QdvxmKRdjm3KKV2AjTiGcXMfWHQpVFnmhtb289yo"),  // bids
-  new PublicKey("AQKXXC29ybqL8DLeAVNt3ebpwMv8Sb4csberrP6Hz6o5"),  // asks
-  new PublicKey("9MgPMkdEHFX7DZaitSh6Crya3kCCr1As6JC75bm3mjuC"),  // events
-  new PublicKey("H61Y7xVnbWVXrQQx3EojTEqf3ogKVY5GfGjEn5ewyX7B"),  // vaultA
-  new PublicKey("9FLih4qwFMjdqRAGmHeCxa64CgjP1GtcgKJgHHgz44ar"),  // vaultB
-  new PublicKey("FGBvMAu88q9d1Csz7ZECB5a2gbWwp6qicNxN2Mo7QhWG"),  // vaultSigner
+  new PublicKey("B2na8Awyd7cpC59iEU43FagJAPLigr3AP3s38KM982bu"),  // market
+  new PublicKey("3Wgvew2C4XRKJH3Gyn6MkUNkywiXM76ozCcQmvWQY8tD"),  // bids
+  new PublicKey("DdodgUuckqcvEXeKzxUJqbqxPyNpyseWu1QHoAhhi7HW"),  // asks
+  new PublicKey("eZNP9fzaKv6pCka26M5WgVt4Ut17nKT7Ra9AHXSSyjk"),  // events
+  new PublicKey("8R9Ej7Xm8KcSGk6wJnWnY4haqZBTyLrDwGJYzSze7XVm"),  // vaultA
+  new PublicKey("8iofzoHaVY2PjqjZmq7jrF3N3eQVLBxzMwSCKMXc5zny"),  // vaultB
+  new PublicKey("GvCQH6vXF6FRK86SKoGRCiZf5waFdqG2XzodgPZ2uWmS"),  // vaultSigner
+
+  OPENBOOK_SERUM_PROGRAM,
 )
 
 export const RAYDIUM_RAY_USDC_MARKET = new RaydiumMarket(
@@ -177,18 +185,20 @@ export const RAYDIUM_RAY_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC, 
   new PublicKey("6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg"),  // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW"),  // openOrders
+  new PublicKey("CSCS9J8eVQ4vnWfWCx59Dz8oLGtcdQ5R53ea4V9o2eUp"),  // openOrders
   new PublicKey("3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT"),  // targetOrders
   new PublicKey("FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th"),  // vaultA
   new PublicKey("Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk"),  // vaultB
 
-  new PublicKey("2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep"),  // market
-  new PublicKey("Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5"),  // bids
-  new PublicKey("DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN"),  // asks
-  new PublicKey("H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz"),  // events
-  new PublicKey("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa"),  // vaultA
-  new PublicKey("22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe"),  // vaultB
-  new PublicKey("FmhXe9uG6zun49p222xt3nG1rBAkWvzVz7dxERQ6ouGw"),  // vaultSigner
+  new PublicKey("DZjbn4XC8qoHKikZqzmhemykVzmossoayV9ffbsUqxVj"),  // market
+  new PublicKey("CXMRrGEseppLPmzYJsx5vYwTkaDEag4A9LJvgrAeNpF"),  // bids
+  new PublicKey("27BrDDYtv9NDQCALCNnDqe3BqjYkgiaQwKBbyqCA8p8B"),  // asks
+  new PublicKey("EkKZwBeKWPvhraYERfUNr2fdh1eazrbTrQXYkRZs24XB"),  // events
+  new PublicKey("7ssdQJxVAEBSigoJovgHcchwcEQFPPtYbyzLHDHEewKM"),  // vaultA
+  new PublicKey("EBGFfeQ5dVwW4HxtShVbh8aCh2fKJ1r2qXBoa6teUve6"),  // vaultB
+  new PublicKey("HYfri5vWyYiDziQeprFErUTbrWdUnkfAFnAAGApZjdGv"),  // vaultSigner
+
+  OPENBOOK_SERUM_PROGRAM,
 )
 
 export const RAYDIUM_mSOL_USDC_MARKET = new RaydiumMarket(
@@ -197,18 +207,20 @@ export const RAYDIUM_mSOL_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC, 
   new PublicKey("ZfvDXXUhZDzDVsapffUyXHj9ByCoPjP4thL6YXcZ9ix"),   // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("4zoatXFjMSirW2niUNhekxqeEZujjC1oioKCEJQMLeWF"),  // openOrders
+  new PublicKey("AvdR6bK32HbBHyysJcFLcH81HxuUKU27aTHHVEknEjHD"),  // openOrders
   new PublicKey("Kq9Vgb8ntBzZy5doEER2p4Zpt8SqW2GqJgY5BgWRjDn"),   // targetOrders
   new PublicKey("8JUjWjAyXTMB4ZXcV7nk3p6Gg1fWAAoSck7xekuyADKL"),  // vaultA
   new PublicKey("DaXyxj42ZDrp3mjrL9pYjPNyBp5P8A2f37am4Kd4EyrK"),  // vaultB
 
-  new PublicKey("6oGsL2puUgySccKzn9XA9afqF217LfxP5ocq4B3LWsjy"),  // market
-  new PublicKey("8qyWhEcpuvEsdCmY1kvEnkTfgGeWHmi73Mta5jgWDTuT"),  // bids
-  new PublicKey("PPnJy6No31U45SVSjWTr45R8Q73X6bNHfxdFqr2vMq3"),   // asks
-  new PublicKey("BC8Tdzz7rwvuYkJWKnPnyguva27PQP5DTxosHVQrEzg9"),  // events
-  new PublicKey("2y3BtF5oRBpLwdoaGjLkfmT3FY3YbZCKPbA9zvvx8Pz7"),  // vaultA
-  new PublicKey("6w5hF2hceQRZbaxjPJutiWSPAFWDkp3YbY2Aq3RpCSKe"),  // vaultB
-  new PublicKey("9dEVMESKXcMQNndoPc5ji9iTeDJ9GfToboy8prkZeT96"),  // vaultSigner
+  new PublicKey("9Lyhks5bQQxb9EyyX55NtgKQzpM4WK7JCmeaWuQ5MoXD"),  // market
+  new PublicKey("kB3BTG6Pz3W7JzKQLHyrAZaFk1LVmeeXRP4ZiCKUaA3"),  // bids
+  new PublicKey("Gi8KdURhXWvsRvDFHpqy1gNfnnYuTsWexQvDpP9711id"),   // asks
+  new PublicKey("CsB4XjwH4uZRjRXEXRBFJ3hi3mb9jujzRCW7NXg7TRtX"),  // events
+  new PublicKey("9LBLMC54awCpsufBA9jm5mbwQbprNqLkSJxnpU7phXsm"),  // vaultA
+  new PublicKey("FxBmYB5gdcDGag6992QkB1beMQajWiEhoRsaDYo3oGjm"),  // vaultB
+  new PublicKey("7BP26tWJq4omUnMyYTJZyDAkStuAShV9ZmGEAnv9yKMB"),  // vaultSigner
+
+  OPENBOOK_SERUM_PROGRAM,
 )
 
 export const RAYDIUM_APT_USDC_MARKET = new RaydiumMarket(
@@ -311,128 +323,6 @@ export const RAYDIUM_ORCA_USDC_MARKET = new RaydiumMarket(
   new PublicKey("Dtz4cysczNNTUbHMqnZW2UfUm87bGecR98snGZePt2ot"),  // vaultSigner
 )
 
-export const RAYDIUM_MNDE_mSOL_MARKET = new RaydiumMarket(
-  "MNDE/mSOL", 
-  TokenID.MNDE, 
-  TokenID.mSOL, 
-  new PublicKey("2kPA9XUuHUifcCYTnjSuN7ZrC3ma8EKPrtzUhC86zj3m"),   // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("G3qeShDT2w3Y9XnJbk5TZsx1qbxkBLFmRsnNVLMnkNZb"),  // openOrders
-  new PublicKey("DfMpzNeT4XHs2xtN74j5q94QfqPSJbng5BgGyyyChsVm"),   // targetOrders
-  new PublicKey("F1zwWuPfYLZfLykDYUqu43A74TUsv8mHuWL6BUrwVhL7"),  // vaultA
-  new PublicKey("TuT7ftAgCQGsETei4Q4nMBwp2QLcDwKnixAEgFSBuao"),  // vaultB
-
-  new PublicKey("AVxdeGgihchiKrhWne5xyUJj7bV2ohACkQFXMAtpMetx"),  // market
-  new PublicKey("9YBjtad6ZxR7hxNXyTjRRPnPgS7geiBMHbBp4BqHsgV2"),  // bids
-  new PublicKey("8UZpvreCr8bprUwstHMPb1pe5jQY82N9fJ1XLa3oKMXg"),   // asks
-  new PublicKey("3eeXmsg8byQEC6Q18NE7MSgSbnAJkxz8KNPbW2zfKyfY"),  // events
-  new PublicKey("aj1igzDQNRg18h9yFGvNqMPBfCGGWLDvKDp2NdYh92C"),  // vaultA
-  new PublicKey("3QjiyDAny7ZrwPohN8TecXL4jBwGWoSUe7hzTiX35Pza"),  // vaultB
-  new PublicKey("6Ysd8CE6KwC7KQYpPD9Ax8B77z3bWRnHt1SVrBM8AYC9"),  // vaultSigner
-)
-
-export const RAYDIUM_BTC_USDT_MARKET = new RaydiumMarket(
-  "BTC/USDT", 
-  TokenID.BTC, 
-  TokenID.USDT, 
-  new PublicKey("AMMwkf57c7ZsbbDCXvBit9zFehMr1xRn8ZzaT1iDF18o"),  // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("G5rZ4Qfv5SxpJegVng5FuZftDrJkzLkxQUNjEXuoczX5"),   // openOrders
-  new PublicKey("DMEasFJLDw27MLkTBFqSX2duvV5GV6LzwtoVqVfBqeGR"),  // targetOrders
-  new PublicKey("7KwCHoQ9nqTnGea4XrcfLUr1pwEWp2maGBHWFqBTeoKW"),  // vaultA
-  new PublicKey("HwbXe9YJVez3BKK22jBH1i64YeX2fSKaYny5jrcPDxAk"),  // vaultB
-
-  new PublicKey("C1EuT9VokAKLiW7i2ASnZUvxDoKuKkCpDDeNxAptuNe4"),  // market
-  new PublicKey("2e2bd5NtEGs6pb758QHUArNxt6X9TTC5abuE1Tao6fhS"),  // bids
-  new PublicKey("F1tDtTDNzusig3kJwhKwGWspSu8z2nRwNXFWc6wJowjM"),  // asks
-  new PublicKey("FERWWtsZoSLcHVpfDnEBnUqHv4757kTUUZhLKBCbNfpS"),  // events
-  new PublicKey("DSf7hGudcxhhegMpZA1UtSiW4RqKgyEex9mqQECWwRgZ"),  // vaultA
-  new PublicKey("BD8QnhY2T96h6KwyJoCT9abMcPBkiaFuBNK9h6FUNX2M"),  // vaultB
-  new PublicKey("EPzuCsSzHwhYWn2j69HQPKWuWz6wuv4ANZiVigLGMBoD"),  // vaultSigner
-);
-
-export const RAYDIUM_ETH_USDT_MARKET = new RaydiumMarket(
-  "ETH/USDT", 
-  TokenID.ETH, 
-  TokenID.USDT, 
-  new PublicKey("He3iAEV5rYjv6Xf7PxKro19eVrC3QAcdic5CF2D2obPt"),  // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("8x4uasC632WSrk3wgwoCWHy7MK7Xo2WKAe9vV93tj5se"),   // openOrders
-  new PublicKey("G1eji3rrfRFfvHUbPEEbvnjmJ4eEyXeiJBVbMTUPfKL1"),  // targetOrders
-  new PublicKey("DZZwxvJakqbraXTbjRW3QoGbW5GK4R5nmyrrGrFMKWgh"),  // vaultA
-  new PublicKey("HoGPb5Rp44TyR1EpM5pjQQyFUdgteeuzuMHtimGkAVHo"),  // vaultB
-
-  new PublicKey("7dLVkUfBVfCGkFhSXDCq1ukM9usathSgS716t643iFGF"),  // market
-  new PublicKey("J8a3dcUkMwrE5kxN86gsL1Mwrg63RnGdvWsPbgdFqC6X"),  // bids
-  new PublicKey("F6oqP13HNZho3bhwuxTmic4w5iNgTdn89HdihMUNR24i"),  // asks
-  new PublicKey("CRjXyfAxboMfCAmsvBw7pdvkfBY7XyGxB7CBTuDkm67v"),  // events
-  new PublicKey("2CZ9JbDYPux5obFXb9sefwKyG6cyteNBSzbstYQ3iZxE"),  // vaultA
-  new PublicKey("D2f4NG1NC1yeBM2SgRe5YUF91w3M4naumGQMWjGtxiiE"),  // vaultB
-  new PublicKey("CVVGPFejAj3A75qPy2116iJFma7zGEuL8DgnxhwUaFBF"),  // vaultSigner
-)
-
-
-export const RAYDIUM_RAY_USDT_MARKET = new RaydiumMarket(
-  "RAY/USDT", 
-  TokenID.RAY, 
-  TokenID.USDT, 
-  new PublicKey("DVa7Qmb5ct9RCpaU7UTpSaf3GVMYz17vNVU67XpdCRut"),  // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("7UF3m8hDGZ6bNnHzaT2YHrhp7A7n9qFfBj6QEpHPv5S8"),  // openOrders
-  new PublicKey("3K2uLkKwVVPvZuMhcQAPLF8hw95somMeNwJS7vgWYrsJ"),  // targetOrders
-  new PublicKey("3wqhzSB9avepM9xMteiZnbJw75zmTBDVmPFLTQAGcSMN"),  // vaultA
-  new PublicKey("5GtSbKJEPaoumrDzNj4kGkgZtfDyUceKaHrPziazALC1"),  // vaultB
-
-  new PublicKey("teE55QrL4a4QSfydR9dnHF97jgCfptpuigbb53Lo95g"),  // market
-  new PublicKey("AvKStCiY8LTp3oDFrMkiHHxxhxk4sQUWnGVcetm4kRpy"),  // bids
-  new PublicKey("Hj9kckvMX96mQokfMBzNCYEYMLEBYKQ9WwSc1GxasW11"),  // asks
-  new PublicKey("58KcficuUqPDcMittSddhT8LzsPJoH46YP4uURoMo5EB"),  // events
-  new PublicKey("2kVNVEgHicvfwiyhT2T51YiQGMPFWLMSp8qXc1hHzkpU"),  // vaultA
-  new PublicKey("5AXZV7XfR7Ctr6yjQ9m9dbgycKeUXWnWqHwBTZT6mqC7"),  // vaultB
-  new PublicKey("HzWpBN6ucpsA9wcfmhLAFYqEUmHjE9n2cGHwunG5avpL"),  // vaultSigner
-)
-
-export const RAYDIUM_mSOL_USDT_MARKET = new RaydiumMarket(
-  "mSOL/USDT", 
-  TokenID.mSOL, 
-  TokenID.USDT, 
-  new PublicKey("BhuMVCzwFVZMSuc1kBbdcAnXwFg9p4HJp7A9ddwYjsaF"),  // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("67xxC7oyzGFMVX8AaAHqcT3UWpPt4fMsHuoHrHvauhog"),  // openOrders
-  new PublicKey("HrNUwbZF4NPRSdZ9hwD7EWV1cwQoJ9Yhu9Jf7ybXALpe"),  // targetOrders
-  new PublicKey("FaoMKkKzMDQaURce1VLewT6K38F6FQS5UQXD1mTXJ2Cb"),  // vaultA
-  new PublicKey("GE8m3rHHejrNf4jE96n5gzMmLbxTfPPcmv9Ppaw24FZa"),  // vaultB
-
-  new PublicKey("HxkQdUnrPdHwXP5T9kewEXs3ApgvbufuTfdw9v1nApFd"),  // market
-  new PublicKey("wNv6YZ31PX5hS42XCijwgd7SuMAu63aPvDWjMNTM2UP"),   // bids
-  new PublicKey("7g28QYJPPNypyPvoAdir8WzPT2Me78u78jufiG7M3wym"),  // asks
-  new PublicKey("Ee9UPY9CH2jHx2LLW2daLyc9VS5Bnp4yTykw4aveeXLX"),  // events
-  new PublicKey("FgVVda2Wnp2PuDpuh23B341qZx2cnArqVNSgxsU877Y"),   // vaultA
-  new PublicKey("2PtdrUGJd7aYoMKXpQ5d19r5Aa1z8dkRj6NNRCNGTE3D"),  // vaultB
-  new PublicKey("QMhH9Mnv1jg8tLNanAvKf3ymbuzh7sDENyjCgiyn3Kk"),   // vaultSigner
-)
-
-
-export const RAYDIUM_SRM_USDT_MARKET = new RaydiumMarket(
-  "SRM/USDT", 
-  TokenID.SRM, 
-  TokenID.USDT, 
-  new PublicKey("af8HJg2ffWoKJ6vKvkWJUJ9iWbRR83WgXs8HPs26WGr"),   // amm
-  new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("8E2GLzSgLmzWdpdXjjEaHbPXRXsA5CFehg6FP6N39q2e"),  // openOrders
-  new PublicKey("8R5TVxXvRfCaYvT493FWAJyLt8rVssUHYVGbGupAbYaQ"),   // targetOrders
-  new PublicKey("D6b4Loa4LoidUor2ffouE5BTMt6tLP6MtkNrsfBWG2C3"),  // vaultA
-  new PublicKey("4gNeJniq6yqEygFmbAJa82TQjH1j3Fczm4bdeBHhwGJ1"),  // vaultB
-
-  new PublicKey("AtNnsY1AyRERWJ8xCskfz38YdvruWVJQUVXgScC1iPb"),  // market
-  new PublicKey("EE2CYFBSoMvcUR9mkEF6tt8kBFhW9zcuFmYqRM9GmqYb"),  // bids
-  new PublicKey("nkNzrV3ZtkWCft6ykeNGXXCbNSemqcauYKiZdf5JcKQ"),   // asks
-  new PublicKey("2i34Kriz23ZaQaJK6FVhzkfLhQj8DSqdQTmMwz4FF9Cf"),  // events
-  new PublicKey("GxPFMyeb7BUnu2mtGV2Zvorjwt8gxHqwL3r2kVDe6rZ8"),  // vaultA
-  new PublicKey("149gvUQZeip4u8bGra5yyN11btUDahDVHrixzknfKFrL"),  // vaultB
-  new PublicKey("4yWr7H2p8rt11QnXb2yxQF3zxSdcToReu5qSndWFEJw"),  // vaultSigner
-)
-
 export const RAYDIUM_stSOL_USDC_MARKET = new RaydiumMarket(
   "stSOL/USDC",
   TokenID.stSOL,
@@ -459,16 +349,18 @@ export const RAYDIUM_whETH_USDC_MARKET = new RaydiumMarket(
   TokenID.USDC,
   new PublicKey("EoNrn8iUhwgJySD1pHu8Qxm5gSQqLK3za4m8xzD2RuEb"),   // amm
   new PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"),  // ammAuthority
-  new PublicKey("6iwDsRGaQucEcfXX8TgDW1eyTfxLAGrypxdMJ5uqoYcp"),  // openOrders
+  new PublicKey("BkaKrnpgoTLX14SrDZdcgvh3S1CXpxo9Pfdo5LE5uotM"),  // openOrders
   new PublicKey("EGZL5PtEnSHrNmeoQF64wXG6b5oqiTArDvAQuSRyomX5"),   // targetOrders
   new PublicKey("DVWRhoXKCoRbvC5QUeTECRNyUSU1gwUM48dBMDSZ88U"),  // vaultA
   new PublicKey("HftKFJJcUTu6xYcS75cDkm3y8HEkGgutcbGsdREDWdMr"),  // vaultB
 
-  new PublicKey("8Gmi2HhZmwQPVdCwzS7CM66MGstMXPcTVHA7jF19cLZz"),  // market
-  new PublicKey("3nXzH1gYKM1FKdSLHM7GCRG76mhKwyDjwinJxAg8jjx6"),  // bids
-  new PublicKey("b3L5dvehk48X4mDoKzZUZKA4nXGpPAMFkYxHZmsZ98n"),   // asks
-  new PublicKey("3z4QQPFdgNSxazqEAzmZD5C5tJWepczimVqWak2ZPY8v"),  // events
-  new PublicKey("8cCoWNtgCL7pMapGZ6XQ6NSyD1KC9cosUEs4QgeVq49d"),  // vaultA
-  new PublicKey("C7KrymKrLWhCsSjFaUquXU3SYRmgYLRmMjQ4dyQeFiGE"),  // vaultB
-  new PublicKey("FG3z1H2BBsf5ekEAxSc1K6DERuAuiXpSdUGkYecQrP5v"),  // vaultSigner
+  new PublicKey("FZxi3yWkE5mMjyaZj6utmYL54QQYfMCKMcLaQZq4UwnA"),  // market
+  new PublicKey("aknvfZ4mKykoGSNy6ZGUjKGz8xKWVKAkqsfHQEvaFJJ"),  // bids
+  new PublicKey("51QtGepdiruSb1n6pmKHLNaRNT6jpAqquF71G7Ux493Y"),   // asks
+  new PublicKey("4v7Tg2bEEV1WHDgXja7KHfJh5zCcWQmafNbt14pUC3PJ"),  // events
+  new PublicKey("AW9cs18vGQnNitjHpBRFAJCFomncMGkB3qpzVqcSPZzz"),  // vaultA
+  new PublicKey("6N4p6Uo4QsFTXCra8Y8suVqCaNSNhTyvEMVJE9ARd1JK"),  // vaultB
+  new PublicKey("G6bwK22tQZwv6zfQXNehuA4rFJRVNxqZW2dr7MGGSfSN"),  // vaultSigner
+
+  OPENBOOK_SERUM_PROGRAM,
 )

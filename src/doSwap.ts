@@ -5,7 +5,7 @@ import {
   RAYDIUM_ETH_USDC_MARKET,
   RAYDIUM_mSOL_USDC_MARKET,
   RAYDIUM_RAY_USDC_MARKET,
-  // RAYDIUM_SOL_USDC_MARKET,
+  RAYDIUM_SOL_USDC_MARKET,
   RAYDIUM_APT_USDC_MARKET,
   RAYDIUM_SRM_USDC_MARKET,
   RAYDIUM_stSOL_USDC_MARKET,
@@ -28,7 +28,7 @@ import { MERCURIAL_USTv1_USDC_MARKET } from './mercurial';
 import invariant from 'tiny-invariant';
 import {
   ORCA_ORCA_USDC_WHIRL_MARKET,
-  ORCA_SOL_USDC_WHIRL_MARKET,
+  // ORCA_SOL_USDC_WHIRL_MARKET,
   ORCA_WHETH_USDC_WHIRL_MARKET,
 } from './orca/orcaWhirlPoolConstants';
 import connection from './utils/connection';
@@ -50,6 +50,32 @@ async function getAssociatedTokAcc(tokenId: TokenID, owner: PublicKey): Promise<
     MINTS[tokenId],
     owner,
   );
+}
+
+async function checkOrCreateAssociatedTokAcc(tokenId: TokenID, owner: PublicKey) {
+  const mint = MINTS[tokenId];
+  const acc = await Token.getAssociatedTokenAddress(
+    ASSOCIATED_TOKEN_PROGRAM_ID, 
+    TOKEN_PROGRAM_ID, 
+    mint, 
+    owner,
+  );
+  const accInfo = await connection.getAccountInfo(acc, 'confirmed');
+  if (accInfo) {
+    // good
+  } else {
+    // create it and init
+    const createIx = Token.createAssociatedTokenAccountInstruction(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      mint,
+      acc,
+      owner,
+      owner,
+    );
+    return [createIx];
+  }
+  return [];
 }
 
 async function doSwap() {
@@ -128,8 +154,8 @@ async function doSwap() {
     APT: () => RAYDIUM_APT_USDC_MARKET,
     BTC: () => RAYDIUM_BTC_USDC_MARKET,
     ETH: () => RAYDIUM_ETH_USDC_MARKET,
-    // SOL: () => RAYDIUM_SOL_USDC_MARKET,
-    SOL: () => ORCA_SOL_USDC_WHIRL_MARKET,
+    SOL: () => RAYDIUM_SOL_USDC_MARKET,
+    // SOL: () => ORCA_SOL_USDC_WHIRL_MARKET,
     mSOL: () => RAYDIUM_mSOL_USDC_MARKET,
     USDT: () => ORCA_USDT_USDC_MARKET,
     UST: () => MERCURIAL_USTv1_USDC_MARKET,
@@ -182,6 +208,9 @@ async function doSwap() {
     (await conn.getParsedAccountInfo(buyTokenAcc, 'confirmed')).value?.data as ParsedAccountData
   ).parsed.info.tokenAmount.uiAmount;
   console.log('Sell token account: ' + sellTokenAcc.toString());
+
+  const ixs = await checkOrCreateAssociatedTokAcc(mainTokenType, keypair.publicKey);
+
   const tradeIxs = await swapper.createSwapInstructions(
     sellTokenID,
     parseFloat(sellAmt) * DECIMALS[sellTokenID],
@@ -195,7 +224,7 @@ async function doSwap() {
   );
 
   const tradeTx = new Transaction();
-  tradeIxs.forEach(ix => tradeTx.add(ix));
+  tradeTx.add(...ixs, ...tradeIxs);
 
   const sig = await conn.sendTransaction(tradeTx, [keypair], {
     preflightCommitment: 'confirmed',
