@@ -131,7 +131,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@orca-so/common-sdk@^0.1.1", "@orca-so/common-sdk@~0.1.1":
+"@orca-so/common-sdk@0.1.1", "@orca-so/common-sdk@~0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@orca-so/common-sdk/-/common-sdk-0.1.1.tgz#18a3a562f1b57f970f2115f453c7e00aa05034cf"
   integrity sha512-OKFwr5VgzLKmM/C6xQom4y1jxrihuhKXhDwYMbgPLJW4SllePOfS6SG5fp9/17SvyuWL/zna8Z6ZW2QHpX1Yxw==
@@ -141,7 +141,7 @@
     decimal.js "^10.3.1"
     tiny-invariant "^1.2.0"
 
-"@orca-so/whirlpools-sdk@^0.5.3":
+"@orca-so/whirlpools-sdk@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@orca-so/whirlpools-sdk/-/whirlpools-sdk-0.5.3.tgz#95b4547b4caf05db2b850dadf05b3b9f38c170a9"
   integrity sha512-HhoZo+q1KXxAEjfVbbKTdW2B8APxDpvsRCX/AqxnN2/DOI3M+p1ZWHkrrHNINbygwJXE6Mi+jwx7jTBT2hbtVw==
